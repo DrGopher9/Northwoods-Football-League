@@ -1,15 +1,18 @@
-/* --- DEBUG BORDER (Remove this later) --- */
-body { border: 5px solid #4F2683; }
+/* --- 1. GLOBAL RESET & TOKENS --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-/* --- GLOBAL TOKENS --- */
-* { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
     --bg-deep: #0f0f12; 
     --surface: #1a1a1d;
     --accent: #4F2683; /* Vikings Purple */
+    --accent-glow: rgba(79, 38, 131, 0.4);
     --text: #ffffff;
     --text-dim: #b0b0b0;
-    --glass-bg: rgba(15, 15, 18, 0.95);
+    --glass-bg: rgba(15, 15, 18, 0.9);
     --glass-border: rgba(255, 255, 255, 0.1);
 }
 
@@ -18,10 +21,104 @@ body {
     color: var(--text);
     font-family: 'Inter', sans-serif;
     line-height: 1.6;
-    padding-top: 80px; /* Space for fixed nav */
 }
 
-/* --- THE FIX: FORCING THE LAYOUT --- */
+/* Safety for all images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* --- 2. GLASS NAVIGATION --- */
+.glass-nav {
+    position: fixed;
+    top: 0; width: 100%;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
+    z-index: 1000;
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+}
+
+.logo-main {
+    /* Secondary constraint to keep logo small */
+    width: 35px !important;
+    height: 35px !important;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+}
+
+.nav-links a {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+    opacity: 0.7;
+    transition: 0.3s ease;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    opacity: 1;
+    color: var(--accent);
+}
+
+/* --- 3. HERO SECTION --- */
+.hero-section {
+    padding-top: 100px;
+    height: 65vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(rgba(15, 15, 18, 0.75), var(--bg-deep));
+    text-align: center;
+}
+
+.hero-content h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    text-transform: uppercase;
+}
+
+.hero-actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.btn-primary { background: var(--accent); color: white; box-shadow: 0 4px 15px var(--accent-glow); }
+.btn-secondary { border: 2px solid var(--accent); color: white; }
+
+/* --- 4. DASHBOARD: BENTO GRID --- */
 .bento-container {
     display: grid;
     gap: 1.5rem;
@@ -32,27 +129,18 @@ body {
 }
 
 .glass-card {
-    background: var(--surface);
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--glass-border);
     border-radius: 20px;
-    padding: 2rem;
+    padding: 1.5rem;
 }
 
-/* Featured: GOTW spans more columns */
-.featured-card { grid-column: span 8; }
-.standings-card { grid-column: span 4; }
-.stats-card { grid-column: span 4; }
+.featured-card { grid-column: span 8; grid-row: span 2; }
+.standings-card { grid-column: span 4; grid-row: span 3; }
+.stats-card { grid-column: span 4; grid-row: span 2; }
 .news-card { grid-column: span 8; }
 
-/* Fixed Navbar Styling */
-.glass-nav {
-    position: fixed; top: 0; width: 100%;
-    background: var(--glass-bg);
-    border-bottom: 1px solid var(--glass-border);
-    z-index: 1000;
-    padding: 1rem 2rem;
-    display: flex; justify-content: space-between; align-items: center;
+/* Responsive adjustments */
+@media (max-width: 1000px) {
+    .bento-item { grid-column: span 12 !important; }
 }
-
-.nav-links { display: flex; list-style: none; gap: 20px; }
-.nav-links a { color: var(--text); text-decoration: none; font-weight: bold; }
