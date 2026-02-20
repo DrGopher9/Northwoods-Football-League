@@ -1,19 +1,15 @@
-/* --- 1. GLOBAL RESET & TOKENS --- */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* --- DEBUG BORDER (Remove this later) --- */
+body { border: 5px solid #4F2683; }
 
+/* --- GLOBAL TOKENS --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
-    /* Core Palette */
     --bg-deep: #0f0f12; 
     --surface: #1a1a1d;
     --accent: #4F2683; /* Vikings Purple */
-    --accent-glow: rgba(79, 38, 131, 0.4);
     --text: #ffffff;
     --text-dim: #b0b0b0;
-    --glass-bg: rgba(15, 15, 18, 0.85);
+    --glass-bg: rgba(15, 15, 18, 0.95);
     --glass-border: rgba(255, 255, 255, 0.1);
 }
 
@@ -22,200 +18,41 @@ body {
     color: var(--text);
     font-family: 'Inter', sans-serif;
     line-height: 1.6;
-    overflow-x: hidden;
+    padding-top: 80px; /* Space for fixed nav */
 }
 
-/* --- 2. GLASS NAVIGATION --- */
-.glass-nav {
-    position: fixed;
-    top: 0; width: 100%;
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--glass-border);
-    z-index: 1000;
-}
-
-.nav-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: 'Oswald', sans-serif;
-    font-size: 1.3rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.logo-main {
-    width: 35px;
-    height: auto;
-    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-    gap: 25px;
-}
-
-.nav-links a {
-    color: var(--text);
-    text-decoration: none;
-    font-weight: 500;
-    opacity: 0.7;
-    transition: 0.3s ease;
-}
-
-.nav-links a:hover, .nav-links a.active {
-    opacity: 1;
-    color: var(--accent);
-}
-
-/* --- 3. HERO SECTION --- */
-.hero-section {
-    padding-top: 100px;
-    height: 70vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(rgba(15, 15, 18, 0.7), var(--bg-deep)), url('images/hero-bg.jpg') center/cover;
-    text-align: center;
-}
-
-.hero-content h1 {
-    font-family: 'Oswald', sans-serif;
-    font-size: clamp(2.5rem, 8vw, 4.5rem);
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-}
-
-.hero-content p {
-    color: var(--text-dim);
-    font-size: 1.2rem;
-    max-width: 600px;
-    margin: 0 auto 2rem;
-}
-
-.hero-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
-
-.btn-primary, .btn-secondary {
-    padding: 14px 30px;
-    border-radius: 8px;
-    font-weight: 700;
-    text-decoration: none;
-    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.btn-primary {
-    background: var(--accent);
-    color: white;
-    box-shadow: 0 4px 20px var(--accent-glow);
-}
-
-.btn-secondary {
-    border: 2px solid var(--accent);
-    color: white;
-}
-
-.btn-primary:hover {
-    transform: translateY(-4px);
-    filter: brightness(1.2);
-}
-
-/* --- 4. LIVE TICKER --- */
-.ticker-section {
-    background: #000;
-    border-top: 1px solid var(--glass-border);
-    border-bottom: 1px solid var(--glass-border);
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-}
-
-.ticker-label {
-    background: var(--accent);
-    padding: 10px 20px;
-    font-weight: 800;
-    font-size: 0.8rem;
-    white-space: nowrap;
-}
-
-.ticker-content {
-    padding-left: 20px;
-    color: var(--text-dim);
-    font-size: 0.9rem;
-}
-
-/* --- 5. BENTO GRID SYSTEM --- */
+/* --- THE FIX: FORCING THE LAYOUT --- */
 .bento-container {
     display: grid;
     gap: 1.5rem;
-    padding: 3rem 2rem;
+    padding: 2rem;
     max-width: 1400px;
     margin: 0 auto;
     grid-template-columns: repeat(12, 1fr);
 }
 
 .glass-card {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--surface);
     border: 1px solid var(--glass-border);
     border-radius: 20px;
     padding: 2rem;
-    transition: 0.4s ease;
 }
 
-.glass-card:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: var(--accent);
-    transform: translateY(-5px);
-}
-
-/* Card Sizing */
-.featured-card { grid-column: span 8; grid-row: span 2; }
-.standings-card { grid-column: span 4; grid-row: span 3; }
-.stats-card { grid-column: span 4; grid-row: span 2; }
+/* Featured: GOTW spans more columns */
+.featured-card { grid-column: span 8; }
+.standings-card { grid-column: span 4; }
+.stats-card { grid-column: span 4; }
 .news-card { grid-column: span 8; }
 
-/* Dashboard Typography */
-h3 { font-family: 'Oswald', sans-serif; margin-bottom: 1.5rem; letter-spacing: 1px; color: var(--accent); }
-.badge { background: var(--accent); padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; }
-
-.gotw-content {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 2rem 0;
-}
-
-.bento-logo { width: 80px; height: auto; }
-.vs { font-size: 2rem; font-weight: 800; color: var(--text-dim); }
-
-/* Mini Table Styling */
-.mini-table { list-style: none; }
-.mini-table li {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 0;
+/* Fixed Navbar Styling */
+.glass-nav {
+    position: fixed; top: 0; width: 100%;
+    background: var(--glass-bg);
     border-bottom: 1px solid var(--glass-border);
+    z-index: 1000;
+    padding: 1rem 2rem;
+    display: flex; justify-content: space-between; align-items: center;
 }
 
-/* --- 6. MOBILE RESPONSIVENESS --- */
-@media (max-width: 1000px) {
-    .featured-card, .standings-card, .stats-card, .news-card {
-        grid-column: span 12;
-    }
-    .hero-content h1 { font-size: 3rem; }
-}
+.nav-links { display: flex; list-style: none; gap: 20px; }
+.nav-links a { color: var(--text); text-decoration: none; font-weight: bold; }
