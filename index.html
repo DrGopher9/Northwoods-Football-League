@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body class="dark-theme">
+
     <nav class="glass-nav">
         <div class="nav-container">
             <div class="brand">
@@ -19,27 +20,79 @@
                 <li><a href="schedule.html">Schedule</a></li>
                 <li><a href="stats.html">Stats</a></li>
                 <li><a href="teams.html">Teams</a></li>
+                <li><a href="rules.html">Rules</a></li>
                 <li class="admin-link"><a href="admin.html">Admin</a></li>
             </ul>
         </div>
     </nav>
 
-    <main class="hero-section">
-        <div class="hero-overlay">
+    <header class="hero-section">
+        <div class="hero-content">
             <h1>The Gridiron Awaits.</h1>
-            <p>Welcome to the next generation of Northwoods Football.</p>
+            <p>Welcome to the next generation of the Northwoods Football League.</p>
             <div class="hero-actions">
                 <a href="schedule.html" class="btn-primary">View Schedule</a>
                 <a href="stats.html" class="btn-secondary">League Leaders</a>
             </div>
         </div>
-    </main>
+    </header>
 
     <section class="ticker-section" id="liveTicker">
         <div class="ticker-label">LIVE SCORES</div>
-        <div class="ticker-content">
-            <p>Waiting for Season 2039 Kickoff...</p>
+        <div class="ticker-content" id="scoresTicker">
+            <p>Waiting for Week 1 Kickoff...</p>
         </div>
     </section>
-</body>
+
+    <main class="bento-container">
+        
+        <section class="bento-item featured-card glass-card">
+            <header>
+                <span class="badge">GAME OF THE WEEK</span>
+                <h2>Vikings vs. Dolphins</h2>
+            </header>
+            <div class="gotw-content">
+                <img src="images/logos/30.png" class="bento-logo" alt="MIN">
+                <span class="vs">VS</span>
+                <img src="images/logos/19.png" class="bento-logo" alt="MIA">
+            </div>
+            <p class="card-footer">Monday, 8:00 PM CST • Streamed on Twitch</p>
+        </section>
+
+        <section class="bento-item standings-card glass-card">
+            <h3>NFC North</h3>
+            <ul class="mini-table">
+                <li><span>MIN Vikings</span> <strong>12-2</strong></li>
+                <li><span>DET Lions</span> <strong>10-4</strong></li>
+                <li><span>GB Packers</span> <strong>8-6</strong></li>
+                <li><span>CHI Bears</span> <strong>4-10</strong></li>
+            </ul>
+            <a href="standings.html" class="card-link">Full Standings →</a>
+        </section>
+
+        <section class="bento-item stats-card glass-card">
+            <h3>Passing Leader</h3>
+            <div class="stat-highlight">
+                <p class="stat-value">4,250</p>
+                <p class="stat-label">Total Yards</p>
+            </div>
+            <p class="player-name">J.J. McCarthy (MIN)</p>
+        </section>
+
+        <section class="bento-item news-card glass-card">
+            <h3>League News</h3>
+            <ul class="news-feed">
+                <li>• Trade Deadline approaching this Friday.</li>
+                <li>• Week 15 Game of the Week has been flexed.</li>
+                <li>• New Rules Committee notes posted in Discord.</li>
+            </ul>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2026 Northwoods Football League. Built for the community.</p>
+    </footer>
+
+    </body>
 </html>
