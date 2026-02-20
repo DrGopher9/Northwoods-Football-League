@@ -1,53 +1,76 @@
-/* --- RESET & VARIABLES --- */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* --- UPDATED STYLE.CSS --- */
 :root {
-    --bg-deep: #0a0a0b;
-    --card-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --bg-deep: #0f0f12; /* Slightly lighter than pure black for depth */
+    --surface: #1a1a1d;
     --accent: #4F2683; /* Vikings Purple */
-    --text: #f0f0f0;
+    --accent-glow: rgba(79, 38, 131, 0.4);
+    --text: #ffffff;
+    --text-dim: #b0b0b0;
 }
 
 body {
     background-color: var(--bg-deep);
     color: var(--text);
     font-family: 'Inter', sans-serif;
-    overflow-x: hidden;
+    line-height: 1.6;
 }
 
-/* --- GLASS NAVBAR --- */
+/* Fix the Glass Navbar */
 .glass-nav {
     position: fixed;
     top: 0; width: 100%;
-    background: rgba(10, 10, 11, 0.8);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--glass-border);
+    background: rgba(15, 15, 18, 0.9);
+    backdrop-filter: blur(12px); /* Stronger blur for glass effect */
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 1000;
 }
-.nav-container {
-    max-width: 1200px; margin: 0 auto;
-    display: flex; justify-content: space-between;
-    align-items: center; padding: 1rem 2rem;
-}
-.brand { display: flex; align-items: center; gap: 15px; font-family: 'Oswald', sans-serif; font-size: 1.2rem; }
-.logo-main { width: 40px; height: auto; }
-.nav-links { display: flex; list-style: none; gap: 30px; }
-.nav-links a { color: var(--text); text-decoration: none; opacity: 0.7; transition: 0.3s; }
-.nav-links a:hover, .nav-links a.active { opacity: 1; color: var(--accent); }
 
-/* --- HERO SECTION --- */
+/* Fix Hero & Buttons */
 .hero-section {
-    height: 60vh; width: 100%;
-    display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(rgba(0,0,0,0.6), var(--bg-deep)), url('images/hero-bg.jpg'); /* You can add a bg image later */
-    background-size: cover; text-align: center;
+    padding-top: 100px; /* Space for the fixed nav */
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
-.hero-section h1 { font-family: 'Oswald', sans-serif; font-size: 4rem; margin-bottom: 1rem; }
-.btn-primary { background: var(--accent); color: white; padding: 12px 30px; border-radius: 5px; text-decoration: none; font-weight: bold; }
 
-/* --- TICKER --- */
-.ticker-section {
-    background: #111; border-top: 2px solid var(--accent);
-    display: flex; padding: 10px; font-size: 0.9rem;
+.hero-actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 20px; /* Separates the buttons properly */
+    justify-content: center;
 }
-.ticker-label { background: var(--accent); padding: 5px 15px; font-weight: bold; }
+
+.btn-primary, .btn-secondary {
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    background: #5e2e9c;
+}
+
+/* Ensure Logo is Visible */
+.logo-main {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+}
