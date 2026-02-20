@@ -1,0 +1,53 @@
+/* --- RESET & VARIABLES --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+    --bg-deep: #0a0a0b;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --accent: #4F2683; /* Vikings Purple */
+    --text: #f0f0f0;
+}
+
+body {
+    background-color: var(--bg-deep);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+}
+
+/* --- GLASS NAVBAR --- */
+.glass-nav {
+    position: fixed;
+    top: 0; width: 100%;
+    background: rgba(10, 10, 11, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glass-border);
+    z-index: 1000;
+}
+.nav-container {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-between;
+    align-items: center; padding: 1rem 2rem;
+}
+.brand { display: flex; align-items: center; gap: 15px; font-family: 'Oswald', sans-serif; font-size: 1.2rem; }
+.logo-main { width: 40px; height: auto; }
+.nav-links { display: flex; list-style: none; gap: 30px; }
+.nav-links a { color: var(--text); text-decoration: none; opacity: 0.7; transition: 0.3s; }
+.nav-links a:hover, .nav-links a.active { opacity: 1; color: var(--accent); }
+
+/* --- HERO SECTION --- */
+.hero-section {
+    height: 60vh; width: 100%;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(rgba(0,0,0,0.6), var(--bg-deep)), url('images/hero-bg.jpg'); /* You can add a bg image later */
+    background-size: cover; text-align: center;
+}
+.hero-section h1 { font-family: 'Oswald', sans-serif; font-size: 4rem; margin-bottom: 1rem; }
+.btn-primary { background: var(--accent); color: white; padding: 12px 30px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+
+/* --- TICKER --- */
+.ticker-section {
+    background: #111; border-top: 2px solid var(--accent);
+    display: flex; padding: 10px; font-size: 0.9rem;
+}
+.ticker-label { background: var(--accent); padding: 5px 15px; font-weight: bold; }
