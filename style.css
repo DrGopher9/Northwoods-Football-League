@@ -1,146 +1,51 @@
-/* --- 1. GLOBAL RESET & TOKENS --- */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-    --bg-deep: #0f0f12; 
-    --surface: #1a1a1d;
-    --accent: #4F2683; /* Vikings Purple */
-    --accent-glow: rgba(79, 38, 131, 0.4);
-    --text: #ffffff;
-    --text-dim: #b0b0b0;
-    --glass-bg: rgba(15, 15, 18, 0.9);
-    --glass-border: rgba(255, 255, 255, 0.1);
-}
-
-body {
-    background-color: var(--bg-deep);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    line-height: 1.6;
-}
-
-/* Safety for all images */
-img {
-    max-width: 100%;
-    height: auto;
-}
-
-/* --- 2. GLASS NAVIGATION --- */
-.glass-nav {
-    position: fixed;
-    top: 0; width: 100%;
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--glass-border);
-    z-index: 1000;
-}
-
-.nav-container {
+/* --- RULES PAGE SPECIFIC --- */
+.rules-layout {
+    display: flex;
     max-width: 1400px;
-    margin: 0 auto;
+    margin: 100px auto 0;
+    padding: 0 2rem;
+    gap: 3rem;
+}
+
+.rules-sidebar {
+    width: 250px;
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+}
+
+.rules-sidebar h3 { color: var(--accent); margin-bottom: 1rem; }
+.rules-sidebar ul { list-style: none; }
+.rules-sidebar li { margin-bottom: 10px; }
+.rules-sidebar a { 
+    text-decoration: none; 
+    color: var(--text-dim); 
+    transition: 0.3s; 
+    font-size: 0.9rem;
+}
+.rules-sidebar a:hover { color: var(--accent); padding-left: 5px; }
+
+.rules-content {
+    flex: 1;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
+    flex-direction: column;
+    gap: 2rem;
+    padding-bottom: 100px;
 }
 
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: 'Oswald', sans-serif;
-    font-size: 1.3rem;
-    text-transform: uppercase;
-}
-
-.logo-main {
-    /* Secondary constraint to keep logo small */
-    width: 35px !important;
-    height: 35px !important;
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-    gap: 25px;
-}
-
-.nav-links a {
-    color: var(--text);
-    text-decoration: none;
-    font-weight: 500;
-    opacity: 0.7;
-    transition: 0.3s ease;
-}
-
-.nav-links a:hover, .nav-links a.active {
-    opacity: 1;
-    color: var(--accent);
-}
-
-/* --- 3. HERO SECTION --- */
-.hero-section {
-    padding-top: 100px;
-    height: 65vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(rgba(15, 15, 18, 0.75), var(--bg-deep));
-    text-align: center;
-}
-
-.hero-content h1 {
-    font-family: 'Oswald', sans-serif;
-    font-size: clamp(2.5rem, 8vw, 4rem);
-    text-transform: uppercase;
-}
-
-.hero-actions {
-    margin-top: 2rem;
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
-
-.btn-primary, .btn-secondary {
-    padding: 12px 25px;
-    border-radius: 8px;
-    font-weight: 700;
-    text-decoration: none;
-    transition: 0.3s ease;
-}
-
-.btn-primary { background: var(--accent); color: white; box-shadow: 0 4px 15px var(--accent-glow); }
-.btn-secondary { border: 2px solid var(--accent); color: white; }
-
-/* --- 4. DASHBOARD: BENTO GRID --- */
-.bento-container {
-    display: grid;
-    gap: 1.5rem;
-    padding: 2rem;
-    max-width: 1400px;
-    margin: 0 auto;
-    grid-template-columns: repeat(12, 1fr);
-}
-
-.glass-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
+.rule-box {
+    margin-top: 1.5rem;
     padding: 1.5rem;
+    background: rgba(255,255,255,0.02);
+    border-left: 4px solid var(--accent);
+    border-radius: 4px;
 }
 
-.featured-card { grid-column: span 8; grid-row: span 2; }
-.standings-card { grid-column: span 4; grid-row: span 3; }
-.stats-card { grid-column: span 4; grid-row: span 2; }
-.news-card { grid-column: span 8; }
+.rule-box h4 { margin-bottom: 0.8rem; color: #fff; }
+.rule-box ul { padding-left: 20px; color: var(--text-dim); }
+.warning-text { color: #ff4444; font-weight: bold; margin: 10px 0; }
 
-/* Responsive adjustments */
-@media (max-width: 1000px) {
-    .bento-item { grid-column: span 12 !important; }
+@media (max-width: 800px) {
+    .rules-layout { flex-direction: column; }
+    .rules-sidebar { position: relative; top: 0; width: 100%; }
 }
