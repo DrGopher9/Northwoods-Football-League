@@ -84,7 +84,8 @@ async function loadWeeks(seasonId, type) {
       return;
     }
 
-    const weeks = Object.keys(snapshot.val()).sort((a, b) => a - b);
+    // Sort numerically rather than alphabetically to ensure Week 10 comes after Week 9
+    const weeks = Object.keys(snapshot.val()).sort((a, b) => Number(a) - Number(b));
     
     // ---> Inject "All Weeks" Option <---
     const allOpt = document.createElement("option");
@@ -101,11 +102,9 @@ async function loadWeeks(seasonId, type) {
 
     weekSelect.disabled = false;
 
-    // Automatically load games for the first available week (which will be index 1 since "All" is 0)
-    if (weeks.length > 0) {
-      weekSelect.value = weeks[0]; 
-      await loadGames(seasonId, type, weekSelect.value);
-    }
+    // Default to "All Weeks" on initial load
+    weekSelect.value = "all";
+    await loadGames(seasonId, type, "all");
 
   } catch (error) {
     console.error("Error loading weeks:", error);
@@ -201,7 +200,6 @@ function renderGames() {
 
     const gameCard = document.createElement("a");
     gameCard.classList.add("game-card");
-    // Link to the specific game page if a scheduleId exists
     gameCard.href = game.scheduleId ? `game.html?scheduleId=${game.scheduleId}` : "#";
 
     gameCard.innerHTML = `
