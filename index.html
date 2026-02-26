@@ -1,206 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Northwoods Football League — A 32-team Madden franchise simulation league. Scores, schedules, standings, and stats." />
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>Northwoods Football League</title>
-
-  <!-- Core styles (order matters) -->
-  <link rel="stylesheet" href="css/reset.css" />
-  <link rel="stylesheet" href="css/colors.css" />
-  <link rel="stylesheet" href="css/layout.css" />
-  <link rel="stylesheet" href="css/navbar.css" />
-  <link rel="stylesheet" href="css/components.css" />
-  <link rel="stylesheet" href="css/home.css" />
-  <link rel="stylesheet" href="css/media.css" />
-
-  <!-- Fonts: Bebas Neue for display, Roboto Condensed for UI -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet" />
+  
+  <link href="css/reset.css" rel="stylesheet"/>
+  <link href="css/navbar.css" rel="stylesheet"/>
+  <link href="css/home.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet"/>
 </head>
 <body>
-
-  <!-- ══ NAVBAR ══════════════════════════════════════════════════ -->
+  
   <nav class="navbar">
     <div class="navbar-left">
-      <img src="images/logos/NWFLlogo.png" alt="NWFL Logo" class="nwfl-logo"
-           width="40" height="40" decoding="async" />
+      <img src="images/logos/NWFLlogo.png" alt="NWFL Logo" class="nwfl-logo" width="40" height="40" decoding="async" />
       <span class="league-title">Northwoods Football League</span>
     </div>
-    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
-    <label for="menu-toggle" class="hamburger">&#9776;</label>
-    <ul class="navbar-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="schedule.html">Schedule</a></li>
-      <li class="dropdown">
-        <a href="coaches.html">Teams</a>
-        <ul class="dropdown-content" id="teamDropdown"></ul>
-      </li>
-      <li><a href="stats.html">Stats</a></li>
-      <li><a href="trade.html">Trade Calc</a></li>
-      <li><a href="rules.html">Rules</a></li>
-      <li class="dropdown">
-        <a href="#">Watch</a>
-        <ul class="dropdown-content">
-          <li><a href="https://www.youtube.com/@northwoodsfootballleague" target="_blank" rel="noopener">YouTube</a></li>
-          <li><a href="https://www.twitch.tv/northwoodsfootballleague" target="_blank" rel="noopener">Twitch</a></li>
-        </ul>
-      </li>
-      <li class="admin-button"><a href="admin.html">Admin</a></li>
-      <li id="authSlot" class="auth-slot"></li>
-    </ul>
-  </nav>
+    </nav>
 
-  <!-- ══ SCORE CAROUSEL ═══════════════════════════════════════════
-       JS (updateRecordsAndPlayoffs.js) replaces this with live cards.
-       Skeleton cards are injected by JS immediately on load.
-  ═══════════════════════════════════════════════════════════════ -->
-  <div class="scores-strip" id="score-carousel"
-       role="region" aria-label="Latest game scores" aria-live="polite">
-    <!-- Skeleton injected by JS while data loads -->
-  </div>
-  <div class="carousel-controls">
-    <button id="prevScores" disabled aria-label="Previous scores">❮ Prev</button>
-    <button id="nextScores" aria-label="Next scores">Next ❯</button>
-  </div>
+  <div id="global-loader">Loading League Data...</div>
 
-  <!-- ══ MAIN GRID ════════════════════════════════════════════════ -->
-  <main class="home-page-grid">
-
-    <!-- ── LEFT: Playoff Picture ─────────────────────────────── -->
-    <aside class="playoff-picture" aria-label="Playoff standings">
-
-      <div class="playoff-box">
-        <h3 class="playoff-box__title">AFC Playoff Picture</h3>
-        <ul id="afcPlayoffs" class="playoff-list" aria-label="AFC playoff seeds">
-          <!-- JS injects skeleton, then live data -->
-        </ul>
-        <h4 class="hunt-heading">In the Hunt</h4>
-        <ul id="afcHunt" class="playoff-list hunt-list" aria-label="AFC wild card contenders"></ul>
+  <main id="main-content" class="grid-container">
+    
+    <section class="column">
+      <div class="card-box" style="margin-bottom: 1.5rem;">
+        <h2>AFC Playoff Picture</h2>
+        <ul id="afcPlayoffs" class="playoff-list"></ul>
+        <h3 style="margin-top: 1rem; color: var(--text-muted); font-size: 1rem; text-transform: uppercase;">In the Hunt</h3>
+        <ul id="afcHunt" class="playoff-list"></ul>
       </div>
 
-      <div class="playoff-box">
-        <h3 class="playoff-box__title">NFC Playoff Picture</h3>
-        <ul id="nfcPlayoffs" class="playoff-list" aria-label="NFC playoff seeds">
-          <!-- JS injects skeleton, then live data -->
-        </ul>
-        <h4 class="hunt-heading">In the Hunt</h4>
-        <ul id="nfcHunt" class="playoff-list hunt-list" aria-label="NFC wild card contenders"></ul>
+      <div class="card-box">
+        <h2>NFC Playoff Picture</h2>
+        <ul id="nfcPlayoffs" class="playoff-list"></ul>
+        <h3 style="margin-top: 1rem; color: var(--text-muted); font-size: 1rem; text-transform: uppercase;">In the Hunt</h3>
+        <ul id="nfcHunt" class="playoff-list"></ul>
       </div>
+    </section>
 
-    </aside>
-
-    <!-- ── CENTER: GOTW + Players of the Week ─────────────────── -->
-    <div class="home-center">
-
-      <!-- Game of the Week
-           IMPORTANT: keep .game-of-the-week and all inner IDs —
-           gotw_final_standalone.js queries them directly.
-      -->
-      <section class="game-of-the-week" aria-label="Game of the Week">
-        <h2 class="gotw-section__heading" id="gotwTitle">Game of the Week</h2>
-
+    <div class="center">
+      
+      <div class="game-of-the-week">
+        <h2 id="gotw-title">Game of the Week</h2>
         <div class="gotw-card">
-          <!-- Away team (left) -->
+          
           <div class="team left-team">
-            <img class="team-logo" alt="" width="80" height="80" loading="lazy" />
+            <img id="awayLogo" class="team-logo"/>
             <div class="gotw-team-info left-align">
               <div class="team-city" id="awayCity"></div>
-              <a class="gotw-team-name" href="#" id="awayName" target="_blank"></a>
-              <div class="team-user"  id="awayUser"></div>
+              <a class="gotw-team-name" href="#" id="awayName"></a>
+              <div class="team-user" id="awayUser"></div>
             </div>
           </div>
-
-          <!-- Score -->
+          
           <div class="gotw-score-box">
-            <a href="#" id="gotwLink" aria-label="View game recap">
+            <a href="#" id="gotwLink">
               <span id="awayScore">--</span>
               <span class="vs">vs</span>
               <span id="homeScore">--</span>
             </a>
           </div>
-
-          <!-- Home team (right) -->
-          <div class="team right-team">
-            <img class="team-logo" alt="" width="80" height="80" loading="lazy" />
+          
+          <div class="team right-team" style="flex-direction: row-reverse; text-align: right;">
+            <img id="homeLogo" class="team-logo"/>
             <div class="gotw-team-info right-align">
               <div class="team-city" id="homeCity"></div>
-              <a class="gotw-team-name" href="#" id="homeName" target="_blank"></a>
-              <div class="team-user"  id="homeUser"></div>
+              <a class="gotw-team-name" href="#" id="homeName"></a>
+              <div class="team-user" id="homeUser"></div>
             </div>
           </div>
+          
         </div>
-      </section>
+      </div>
 
-      <!-- Players of the Week
-           TODO: connect to Firebase config/potw/{season} when data is available.
-           Currently static; update via Admin → Data panel.
-      -->
-      <section class="potw-section" aria-label="Players of the Week">
-        <h2 class="section-heading">Players of the Week</h2>
+      <div class="players-of-week" style="margin-top: 3rem;">
+        <h2>Players of the Week</h2>
         <div class="potw-grid">
           <div class="potw-card">
-            <img class="potw-logo" src="images/logos/MIA.png" alt="Miami Dolphins"
-                 loading="lazy" width="40" height="40" />
+            <img alt="Miami Dolphins" class="potw-logo" src="images/logos/MIA.png" height="40"/>
             <h3>AFC Offensive</h3>
             <p>Tua Tagovailoa</p>
-            <p class="potw-stats">466 yds · 3 TD</p>
+            <p>466 yards, 3 TDs</p>
           </div>
           <div class="potw-card">
-            <img class="potw-logo" src="images/logos/CLE.png" alt="Cleveland Browns"
-                 loading="lazy" width="40" height="40" />
+            <img alt="Cleveland Browns" class="potw-logo" src="images/logos/CLE.png" height="40"/>
             <h3>AFC Defensive</h3>
             <p>Myles Garrett</p>
-            <p class="potw-stats">3 sacks · 2 TFL</p>
+            <p>3 sacks, 2 TFL</p>
           </div>
           <div class="potw-card">
-            <img class="potw-logo" src="images/logos/SF.png" alt="San Francisco 49ers"
-                 loading="lazy" width="40" height="40" />
+            <img alt="San Francisco 49ers" class="potw-logo" src="images/logos/SF.png" height="40"/>
             <h3>NFC Offensive</h3>
             <p>Brandon Aiyuk</p>
-            <p class="potw-stats">129 yds · 2 TD</p>
+            <p>129 yards, 2 TDs</p>
           </div>
           <div class="potw-card">
-            <img class="potw-logo" src="images/logos/DAL.png" alt="Dallas Cowboys"
-                 loading="lazy" width="40" height="40" />
+            <img alt="Dallas Cowboys" class="potw-logo" src="images/logos/DAL.png" height="40"/>
             <h3>NFC Defensive</h3>
             <p>Micah Parsons</p>
-            <p class="potw-stats">1 sack · 1 FF</p>
+            <p>1 sack, 1 FF</p>
           </div>
         </div>
-      </section>
+      </div>
+    </div>
 
-    </div><!-- /.home-center -->
-
-    <!-- ── RIGHT: League News ─────────────────────────────────── -->
-    <aside class="home-news" aria-label="League news">
-      <h2 class="section-heading">League News</h2>
-      <ul id="newsList" class="news-list">
-        <li class="news-empty">No news at this time.</li>
+    <div class="column card-box">
+      <h2>League News</h2>
+      <ul id="newsList">
+        <li style="color: var(--text-muted); font-style: italic;">No recent news.</li>
       </ul>
-    </aside>
-
-  </main><!-- /.home-page-grid -->
-
-  <!-- ══ SCRIPTS ══════════════════════════════════════════════════
-       Modules load in parallel; DOMContentLoaded guards inside each.
-  ══════════════════════════════════════════════════════════════ -->
-  <script type="module" src="scripts/firebaseConfig.js"></script>
-  <script type="module" src="scripts/authWidget.js"></script>
-  <script type="module" src="scripts/navbar.js"></script>
-  <script type="module" src="scripts/updateRecordsAndPlayoffs.js"></script>
-  <script type="module" src="scripts/playoff_picture_division_logic.js"></script>
-  <script type="module" src="scripts/gotw_final_standalone.js"></script>
+    </div>
+  </main>
 
   <footer class="site-footer">
-    <p>
-      Copyright &copy; Northwoodsfblg.com, 2025. This site is not affiliated with the
-      National Football League (NFL), NFLPA, Microsoft, Xbox, Sony, PlayStation or EA Sports.
-      All NFL team logos are registered trademarks of their respective clubs.
-    </p>
+    <p>Copyright © Northwoodsfblg.com, 2025.</p>
   </footer>
 
+  <script type="module" src="scripts/home.js"></script>
+  <script type="module" src="scripts/navbar.js"></script>
 </body>
 </html>
