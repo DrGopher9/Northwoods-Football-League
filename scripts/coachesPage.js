@@ -1,103 +1,110 @@
-// scripts/coachesPage.js
 import { db } from "./firebaseConfig.js";
 import { ref, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-// Updated Firebase paths
 const LEAGUE_PATH = "data/xbsx/20390713";
 const COACHES_PATH = "config/coaches";
 
+document.addEventListener("DOMContentLoaded", () => {
+  initDirectory();
+});
 
-// Helper: build a TD safely
-function td(html) { const el = document.createElement("td"); el.innerHTML = html; return el; }
+async function initDirectory() {
+  const loader = document.getElementById("global-loader");
+  const content = document.getElementById("main-content");
 
-async function loadTeamsMeta() {
-  const snap = await get(ref(db, `${LEAGUE_PATH}/teams`));
-  if (!snap.exists()) return {};
-  const raw = snap.val();
+  try {
+    // Fetch teams and coaches data concurrently
+    const [teamsSnap, coachesSnap] = await Promise.all([
+      get(ref(db, `${LEAGUE_PATH}/teams`)),
+      get(ref(db, COACHES_PATH))
+    ]);
+
+    const teamsMeta = teamsSnap.exists() ? extractTeamsMeta(teamsSnap.val()) : {};
+    const coaches = coachesSnap.exists() ? coachesSnap.val() : {};
+
+    renderDirectory(coaches, teamsMeta);
+
+    loader.style.display = "none";
+    content.style.display = "block";
+
+  } catch (error) {
+    console.error("Failed to load directory:", error);
+    loader.innerHTML = `<div style="color: #f44336;">Failed to load directory. Check connection.</div>`;
+  }
+}
+
+function extractTeamsMeta(rawTeamsData) {
   const out = {};
-  for (const [teamId, node] of Object.entries(raw)) {
+  for (const [teamId, node] of Object.entries(rawTeamsData)) {
     out[teamId] = node.meta || {};
   }
   return out;
 }
 
-async function loadCoaches() {
-  const snap = await get(ref(db, COACHES_PATH));
-  return snap.exists() ? snap.val() : {};
-}
+function renderDirectory(coaches, teamsMeta) {
+  const grid = document.getElementById("coachesGrid");
+  if (!grid) return;
+  
+  grid.innerHTML = "";
 
-function render(coaches, teamsMeta) {
-  const tbody = document.getElementById("coachesTbody");
-  if (!tbody) return;
-  tbody.innerHTML = "";
+  // Sort teams alphabetically by City + Mascot
+  const teamKey = (id) => {
+    const m = teamsMeta[id] || {};
+    return [m.cityName, m.displayName].filter(Boolean).join(" ").trim().toLowerCase();
+  };
 
-// Sort by full team name (City + DisplayName), fallback to abbr; case-insensitive
-const teamKey = (id) => {
-  const m = teamsMeta[id] || {};
-  const full = [m.cityName, m.displayName].filter(Boolean).join(" ").trim();
-  return (full || m.abbrName || "").toLowerCase();
-};
+  const entries = Object.entries(coaches).sort((a, b) => teamKey(a[0]).localeCompare(teamKey(b[0])));
 
-const entries = Object.entries(coaches).sort((a, b) =>
-  teamKey(a[0]).localeCompare(teamKey(b[0]), undefined, { sensitivity: "base" })
-);
-
+  if (!entries.length) {
+    grid.innerHTML = `<p style="color: #a1a1aa; grid-column: 1/-1; text-align: center;">No coaches configured yet. Add them in the Admin page.</p>`;
+    return;
+  }
 
   for (const [teamId, c] of entries) {
     const meta = teamsMeta[teamId] || {};
     const teamName = [meta.cityName, meta.displayName].filter(Boolean).join(" ") || "Unknown Team";
     const logo = meta.logoId ? `images/logos/${meta.logoId}.png` : "images/logos/default.png";
-
-    // Link to team page (use '/teams?teamId=' if you've enabled cleanUrls)
     const teamLink = `teams.html?teamId=${teamId}`;
 
-    const tr = document.createElement("tr");
-
-    tr.appendChild(td(`${c.coachName || ""}`));
-
-    tr.appendChild(td(`
-      <a class="team-link" href="${teamLink}">
-        <span class="team-cell">
-          <img class="team-logo" src="${logo}" alt="${meta.abbrName || "Team"} logo">
-          ${teamName}
-        </span>
-      </a>
-    `));
-
-    tr.appendChild(td(`${c.psn || ""}`));
-
-    // Broadcast: plain text if no URL, clickable if URL present
     const platform = (c.broadcast?.platform || "").trim();
     const url = (c.broadcast?.url || "").trim();
-    let broadcastCell = "";
+    
+    let broadcastHtml = `<span class="coach-meta-value">—</span>`;
     if (platform) {
-      broadcastCell = url ? `<a href="${url}" target="_blank" rel="noopener">${platform}</a>` : platform;
-    } else {
-      broadcastCell = "—";
+      broadcastHtml = url 
+        ? `<a href="${url}" target="_blank" rel="noopener" class="broadcast-link">${platform}</a>` 
+        : `<span class="coach-meta-value">${platform}</span>`;
     }
-    tr.appendChild(td(broadcastCell));
 
-    tr.appendChild(td(`${c.timezone || ""}`));
+    const card = document.createElement("a");
+    card.href = teamLink;
+    card.className = "coach-card";
+    
+    card.innerHTML = `
+      <div class="coach-card-header">
+        <img src="${logo}" alt="${meta.abbrName}" class="coach-team-logo" loading="lazy">
+        <h2 class="coach-team-name">${teamName}</h2>
+      </div>
+      <div class="coach-card-body">
+        <div class="coach-meta-row">
+          <span class="coach-meta-label">Coach</span>
+          <span class="coach-meta-value highlight">${c.coachName || "CPU"}</span>
+        </div>
+        <div class="coach-meta-row">
+          <span class="coach-meta-label">Gamertag</span>
+          <span class="coach-meta-value">${c.psn || "—"}</span>
+        </div>
+        <div class="coach-meta-row">
+          <span class="coach-meta-label">Timezone</span>
+          <span class="coach-meta-value">${c.timezone || "—"}</span>
+        </div>
+        <div class="coach-meta-row">
+          <span class="coach-meta-label">Broadcast</span>
+          ${broadcastHtml}
+        </div>
+      </div>
+    `;
 
-    tbody.appendChild(tr);
-  }
-
-  if (!entries.length) {
-    const tr = document.createElement("tr");
-    const el = document.createElement("td");
-    el.colSpan = 5;
-    el.style.opacity = ".8";
-    el.textContent = "No coaches configured yet. Add them in the Admin page.";
-    tr.appendChild(el);
-    tbody.appendChild(tr);
+    grid.appendChild(card);
   }
 }
-
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    const [teamsMeta, coaches] = await Promise.all([loadTeamsMeta(), loadCoaches()]);
-    render(coaches, teamsMeta);
-  } catch (e) {
-    console.error("Failed to load coaches:", e);
-  }
-});
