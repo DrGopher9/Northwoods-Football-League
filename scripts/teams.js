@@ -135,7 +135,7 @@ async function loadUpcomingGames(teamId, currentWeekIndex) {
   const container = document.getElementById("upcomingGames");
   container.innerHTML = "";
 
-  const seenGames = new Set(); // Prevent duplicates
+  const seenMatchups = new Set(); // Aggressive Deduplication
 
   for (const weekIndex of weeksToShow) {
     const snap = await get(ref(db, `${LEAGUE_PATH}/schedules/reg/${weekIndex}`));
@@ -147,9 +147,9 @@ async function loadUpcomingGames(teamId, currentWeekIndex) {
       if (!game || (String(game.homeTeamId) !== teamId && String(game.awayTeamId) !== teamId)) continue;
 
       // Duplicate Check
-      const uniqueKey = `${weekIndex}-${game.homeTeamId}-${game.awayTeamId}`;
-      if (seenGames.has(uniqueKey)) continue;
-      seenGames.add(uniqueKey);
+      const uniqueKey = `${game.homeTeamId}-${game.awayTeamId}`;
+      if (seenMatchups.has(uniqueKey)) continue;
+      seenMatchups.add(uniqueKey);
 
       const isHome = String(game.homeTeamId) === teamId;
       const oppId = isHome ? game.awayTeamId : game.homeTeamId;
@@ -165,13 +165,10 @@ async function loadUpcomingGames(teamId, currentWeekIndex) {
         result = teamScore > oppScore ? "W" : teamScore < oppScore ? "L" : "T";
       }
 
-      // Safe week formatting (handle 0-index if needed)
-      let safeWeek = isNaN(Number(weekIndex)) ? weekIndex : (Number(weekIndex) === 0 ? 1 : weekIndex);
-
       const row = document.createElement("div");
       row.className = "game-row";
       row.innerHTML = `
-        <span style="font-weight: bold; width: 60px;">Wk ${safeWeek}</span>
+        <span style="font-weight: bold; width: 60px;">Wk ${weekIndex}</span>
         <span style="color: var(--text-muted);">${isHome ? "vs" : "@"}</span>
         <img src="images/logos/${opp.logoId}.png" class="opponent-logo" alt="logo">
         <a href="teams.html?teamId=${oppId}" class="opponent-link">${opp.abbrName}</a>
@@ -199,17 +196,17 @@ async function loadSchedule(teamId) {
     const weeks = snap.val();
     const sortedWeeks = Object.keys(weeks).sort((a, b) => Number(a) - Number(b));
     
-    const seenGames = new Set(); // Deduplication
+    const seenMatchups = new Set(); // Aggressive Deduplication
 
     for (const weekIdx of sortedWeeks) {
       for (const gameId in weeks[weekIdx]) {
         const game = weeks[weekIdx][gameId];
         if (!game || (String(game.homeTeamId) !== teamId && String(game.awayTeamId) !== teamId)) continue;
 
-        // Ensure we only render one instance of a matchup per week
-        const uniqueKey = `${weekIdx}-${game.homeTeamId}-${game.awayTeamId}`;
-        if (seenGames.has(uniqueKey)) continue;
-        seenGames.add(uniqueKey);
+        // Duplicate Check
+        const uniqueKey = `${game.homeTeamId}-${game.awayTeamId}`;
+        if (seenMatchups.has(uniqueKey)) continue;
+        seenMatchups.add(uniqueKey);
 
         const isHome = String(game.homeTeamId) === teamId;
         const oppId = isHome ? game.awayTeamId : game.homeTeamId;
@@ -221,12 +218,10 @@ async function loadSchedule(teamId) {
         const oppScore = isHome ? game.awayScore : game.homeScore;
         const result = teamScore != null && oppScore != null ? (teamScore > oppScore ? "W" : teamScore < oppScore ? "L" : "T") : "TBD";
 
-        let safeWeek = isNaN(Number(weekIdx)) ? weekIdx : (Number(weekIdx) === 0 ? 1 : weekIdx);
-
         const item = document.createElement("div");
         item.className = "schedule-item";
         item.innerHTML = `
-          <div style="font-weight: bold; color: var(--text-muted);">Week ${safeWeek}</div>
+          <div style="font-weight: bold; color: var(--text-muted);">Week ${weekIdx}</div>
           <div style="display: flex; align-items: center; gap: 0.75rem;">
             <span style="color: var(--text-muted); font-size: 0.9rem; width: 1.5rem; text-align: right;">${isHome ? "vs" : "@"}</span>
             <img src="images/logos/${opp.logoId}.png" class="opponent-logo" alt="logo" style="width: 28px; height: 28px; object-fit: contain;">
