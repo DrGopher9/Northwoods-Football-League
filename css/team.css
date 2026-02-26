@@ -38,6 +38,124 @@
   margin-left: 2rem;
   padding: 1rem;
 }
+
+/* --- COACHES DIRECTORY GRID --- */
+.directory-wrap {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.directory-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.directory-header h1 {
+  font-size: 2.5rem;
+  color: #f4f4f5;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  letter-spacing: 1px;
+}
+
+.mini-note {
+  color: #a1a1aa;
+  font-size: 1rem;
+}
+
+.coaches-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.coach-card {
+  background: linear-gradient(145deg, #18181b, #09090b);
+  border: 1px solid #27272a;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  text-decoration: none;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.coach-card:hover {
+  transform: translateY(-5px);
+  border-color: #3b82f6;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+}
+
+.coach-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid #27272a;
+  padding-bottom: 1rem;
+}
+
+.coach-team-logo {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+
+.coach-team-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #f4f4f5;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.coach-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.coach-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+}
+
+.coach-meta-label {
+  color: #a1a1aa;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.coach-meta-value {
+  color: #e4e4e7;
+  font-weight: 600;
+}
+
+.coach-meta-value.highlight {
+  color: #3b82f6;
+  font-size: 1.05rem;
+}
+
+.broadcast-link {
+  color: #8ecbff;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  background: rgba(142, 203, 255, 0.1);
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.broadcast-link:hover {
+  background: rgba(142, 203, 255, 0.2);
+  text-decoration: none;
+}
 .team-meta h2 {
   font-size: 2rem;
   font-weight: 700;
