@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Northwoods Football League</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: 'Roboto Condensed', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #181818;
+      padding: 0.5rem;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: #e0e0e0;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+     a:hover {
+      color: #90caf9;
+    }
+
+    .scores-carousel {
+      padding: 1rem;
+      background-color: #1e1e1e;
+      border-bottom: 1px solid #333;
+    }
+
+    .scores-carousel ul {
+      display: inline-flex;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .scores-carousel li {
+      background-color: #2a2a2a;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .scores-carousel li:hover {
+      background-color: #3a3a3a;
+    }
+
+    .scores-carousel img {
+      height: 24px;
+      width: 24px;
+      object-fit: contain;
+    }
+
+    .carousel-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.carousel-controls button {
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 1rem;
+  transition: background-color 0.3s, transform 0.2s ease;
+}
+
+.carousel-controls button:hover {
+  background-color: #3a3a3a;
+  transform: translateY(-1px);
+}
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 1rem;
+      padding: 1rem;
+    }
+
+    .column, .center {
+      background-color: #1e1e1e;
+      padding: 1rem;
+      border-radius: 10px;
+      border: 1px solid #333;
+    }
+
+    h2 {
+      border-bottom: 1px solid #444;
+      padding-bottom: 0.5rem;
+      margin-top: 0;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .team-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .team-row img {
+      height: 24px;
+      margin-right: 0.5rem;
+    }
+
+    .team-row:first-child {
+      font-weight: bold;
+      color: #90caf9;
+    }
+
+    .game-of-the-week {
+      text-align: center;
+      background-color: #292929;
+      border: 1px solid #444;
+      padding: 1.5rem 1rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+
+    .players-of-week {
+      text-align: center;
+    }
+
+    .players-of-week h2 {
+      margin-bottom: 1rem;
+    }
+
+    .potw-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .potw-card {
+      background: #2a2a2a;
+      padding: 1rem;
+      border-radius: 10px;
+      width: 45%;
+      min-width: 200px;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    .potw-card:hover {
+      background-color: #333;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 800px) {
+      .grid-container {
+        grid-template-columns: 1fr;
+      }
+
+      .potw-card {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav-container">
+  <!-- Left: Logo + Title -->
+  <div class="nav-left">
+    <img src="images/logos/NWFLlogo.png" alt="NWL Logo" class="nav-logo" />
+    <span class="nav-title">Northwoods Football League</span>
+  </div>
+
+  <!-- Center: Buttons -->
+  <div class="nav-center">
+    <div class="nav-buttons">
+      <a href="/" class="nav-button-link"><button>Home</button></a>
+      <a href="/games.html" class="nav-button-link"><button>Schedule</button></a>
+      <button disabled>Stats</button>
+      <button disabled>Rules</button>
+      <button disabled>Discord</button>
+      <button disabled>Watch</button>
+    </div>
+  </div>
+
+  <!-- Right: Admin -->
+  <div class="nav-right">
+    <a href="/admin.html" class="nav-button-link"><button class="admin-button">Admin</button></a>
+  </div>
+</nav>
+
+<!-- SCORES -->
+<section class="scores-carousel">
+  <ul id="scoreList"></ul>
+  <div class="carousel-controls">
+    <button id="prevBtn">⟨ Prev</button>
+    <button id="nextBtn">Next ⟩</button>
+  </div>
+</section>
+
+<main class="grid-container">
+ <!-- LEFT COLUMN: PLAYOFF RACE -->
+<div class="column">
+  <h2>AFC Playoff Picture</h2>
+  <div class="column">
+  <div class="playoff-conference">
+    <h2>AFC Playoff Picture</h2>
+    <ul id="afcPlayoffs" class="playoff-list"></ul>
+
+    <div class="hunt-section">
+      <h3>In the Hunt</h3>
+      <ul id="afcHunt" class="playoff-list"></ul>
+    </div>
+  </div>
+
+  <div class="playoff-conference">
+    <h2>NFC Playoff Picture</h2>
+    <ul id="nfcPlayoffs" class="playoff-list"></ul>
+
+    <div class="hunt-section">
+      <h3>In the Hunt</h3>
+      <ul id="nfcHunt" class="playoff-list"></ul>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+
+
+  <!-- CENTER COLUMN -->
+<div class="center">
+
+<!-- Game of the Week Section -->
+<div class="game-of-the-week" id="gotwBox"></div>
+
+<!-- Players of the Week Section -->
+  <div class="players-of-week">
+    <h2>Players of the Week</h2>
+    <div class="potw-grid-2x2">
+      <div class="potw-card">
+        <img src="images/logos/MIA.png" alt="Miami Dolphins" class="potw-logo" />
+        <h3>AFC Offensive</h3>
+        <p>Tua Tagovailoa</p>
+        <p>466 yards, 3 TDs</p>
+      </div>
+      <div class="potw-card">
+        <img src="images/logos/CLE.png" alt="Cleveland Browns" class="potw-logo" />
+        <h3>AFC Defensive</h3>
+        <p>Myles Garrett</p>
+        <p>3 sacks, 2 TFL</p>
+      </div>
+      <div class="potw-card">
+        <img src="images/logos/SF.png" alt="San Francisco 49ers" class="potw-logo" />
+        <h3>NFC Offensive</h3>
+        <p>Brandon Aiyuk</p>
+        <p>129 yards, 2 TDs</p>
+      </div>
+      <div class="potw-card">
+        <img src="images/logos/DAL.png" alt="Dallas Cowboys" class="potw-logo" />
+        <h3>NFC Defensive</h3>
+        <p>Micah Parsons</p>
+        <p>1 sack, 1 forced fumble</p>
+      </div>
+    </div>
+    
+</div>
+
+  <!-- Game of the Week Section -->
+  
+</div>
+    
+  </div>
+
+  
+  </div>
+</div>
+
+
+  <!-- RIGHT COLUMN: LEAGUE NEWS -->
+  <div class="column">
+    <h2>League News</h2>
+    <ul id="newsList"></ul>
+  </div>
+</main>
+
+<!-- FIREBASE SCRIPT -->
+<script type="module" src="scripts/updateRecordsAndPlayoffs.js"></script>
+
+  <!-- PLAYOFF SCRIPT -->
+<script type="module" src="scripts/playoff_picture_division_logic.js"></script>
+<script type="module" src="scripts/gotw_final_standalone.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+/* schedule.css - Schedule Page Specific Styles */
+.schedule-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.schedule-filter select,
+.schedule-filter label {
+  margin-right: 0.5rem;
+}
+
+.schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}

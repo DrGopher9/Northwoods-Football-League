@@ -1,0 +1,44 @@
+/* components.css - Reusable UI Pieces */
+button,
+select {
+  padding: 0.5rem 1rem;
+  background-color: #1f1f1f;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 4px;
+}
+
+.card {
+  background-color: #1e1e1e;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.4);
+}
+
+nav a.active {
+  font-weight: bold;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.btn[disabled] {
+  opacity: .5;
+  cursor: not-allowed;
+}
+.auth-badge { display:flex; gap:.5rem; align-items:center; }
+.auth-name { white-space:nowrap; }
+.admin-pill {
+  display:inline-block; margin-left:.35rem; padding:.05rem .4rem;
+  border-radius:999px; font-size:.75rem; background:#263238; color:#aee0ff;
+}
+.btn.small { padding:.25rem .5rem; font-size:.85rem; }
+
+.site-footer {
+  margin-top: 2rem;
+  padding: 1rem 1.25rem;
+  background: #141516;            /* matches var(--surface) in your palette */
+  color: #a9b3bd;                 /* muted text */
+  border-top: 1px solid #292b2e;  /* subtle divider */
+  font-size: 0.9rem;
+  text-align: center;
+  line-height: 1.5;
+}

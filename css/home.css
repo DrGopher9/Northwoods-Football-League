@@ -1,0 +1,236 @@
+.carousel-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.carousel-controls button {
+  background-color: #1f1f1f;
+  color: white;
+  border: 1px solid #444;
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.carousel-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.carousel-controls button:hover:not(:disabled) {
+  background-color: #333;
+}
+
+.score-carousel {
+  overflow-x: auto;
+  overflow-y: hidden; /* prevent vertical scrollbars */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.score-carousel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+
+/* Migrated styles from index.html */
+body {
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: 'Roboto Condensed', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #181818;
+      padding: 0.5rem;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: #e0e0e0;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+     a:hover {
+      color: #90caf9;
+    }
+
+    .scores-carousel {
+      padding: 1rem;
+      background-color: #1e1e1e;
+      border-bottom: 1px solid #333;
+    }
+
+    .scores-carousel ul {
+      display: inline-flex;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .scores-carousel li {
+      background-color: #2a2a2a;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .scores-carousel li:hover {
+      background-color: #3a3a3a;
+    }
+
+    .scores-carousel img {
+      height: 24px;
+      width: 24px;
+      object-fit: contain;
+    }
+
+    .carousel-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.carousel-controls button {
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 1rem;
+  transition: background-color 0.3s, transform 0.2s ease;
+}
+
+.carousel-controls button:hover {
+  background-color: #3a3a3a;
+  transform: translateY(-1px);
+}
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 1rem;
+      padding: 1rem;
+    }
+
+    .column, .center {
+      background-color: #1e1e1e;
+      padding: 1rem;
+      border-radius: 10px;
+      border: 1px solid #333;
+    }
+
+    h2 {
+      border-bottom: 1px solid #444;
+      padding-bottom: 0.5rem;
+      margin-top: 0;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .team-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .team-row img {
+      height: 24px;
+      margin-right: 0.5rem;
+    }
+
+    .team-row:first-child {
+      font-weight: bold;
+      color: #90caf9;
+    }
+
+    .game-of-the-week {
+      text-align: center;
+      background-color: #292929;
+      border: 1px solid #444;
+      padding: 1.5rem 1rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+
+    .players-of-week {
+      text-align: center;
+    }
+
+    .players-of-week h2 {
+      margin-bottom: 1rem;
+    }
+
+    .potw-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .potw-card {
+      background: #2a2a2a;
+      padding: 1rem;
+      border-radius: 10px;
+      width: 45%;
+      min-width: 200px;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    .potw-card:hover {
+      background-color: #333;
+      transform: translateY(-2px);
+    }
+
+.team-link {
+  color: #55b4ff;
+  text-decoration: none;
+  font-weight: 600;
+}
+.team-link:hover {
+  text-decoration: underline;
+}
+
+/* Optional: Apply Game-of-the-Week box styling */
+.playoff-box {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+
+    @media (max-width: 800px) {
+      .grid-container {
+        grid-template-columns: 1fr;
+      }
+
+      .potw-card {
+        width: 100%;
+      }
+    }
+
+

@@ -1,0 +1,208 @@
+
+/* css/stats.css */
+.stats-page { padding: 1rem; }
+.stats-controls { display:flex; gap:1rem; align-items:center; margin-bottom:1rem; }
+.tabbar { display:flex; gap:.5rem; margin: 1rem 0; }
+.tabbar button { cursor:pointer; }
+.tabbar button.active { outline: 2px solid var(--accent, #00aaff); }
+.stat-grid { display:grid; grid-template-columns: repeat(4, minmax(260px, 1fr)); gap:1rem; }
+@media (max-width: 1400px){ .stat-grid { grid-template-columns: repeat(3, 1fr);}}
+@media (max-width: 1000px){ .stat-grid { grid-template-columns: repeat(2, 1fr);}}
+@media (max-width: 640px){ .stat-grid { grid-template-columns: 1fr;}}
+.stat-card { background:#1e1e1e; border-radius:8px; padding:0; overflow:hidden; }
+.stat-card h3 { margin:0; padding:.75rem 1rem; border-bottom:1px solid #333; font-size:1rem; display:flex; justify-content:space-between; align-items:center;}
+.stat-card table { width:100%; border-collapse: collapse; }
+.stat-card th, .stat-card td { padding:.5rem .75rem; border-bottom:1px solid #2a2a2a; text-align:left; font-size:.95rem; }
+.stat-card tr:last-child td { border-bottom:none; }
+.stat-card .empty { padding:1rem; color:#aaa; font-size:.9rem; }
+.edit-only { display:none; }
+.edit-visible .edit-only { display:block; }
+.leaderboard-edit { background:#141414; border:1px solid #333; border-radius:8px; padding:1rem; margin:1rem 0; }
+.leaderboard-edit h4 { margin-top:0; }
+.leaderboard-edit .grid { display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:.5rem; }
+.leaderboard-edit input, .leaderboard-edit select { width:100%; }
+.leaderboard-edit .row-label { grid-column: 1 / -1; margin-top:.5rem; font-weight:bold; color:#ddd; }
+.stat-name {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.stat-name img.logo { height: 18px; width: 18px; object-fit: contain; }
+
+/* =========================
+   YEARLY AWARDS LAYOUT
+========================= */
+
+.awards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Each row wrapper */
+.award-row {
+  display: grid;
+  gap: 1rem;
+}
+
+/* Row configurations */
+.award-row.row-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.award-row.row-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.award-row.row-5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+/* Card Styling */
+.award-card {
+  padding: 1.25rem 1rem;
+  text-align: center;
+  background: linear-gradient(145deg, #1a1a1a, #121212);
+  border-radius: 10px;
+  transition: 0.2s ease;
+}
+
+.award-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Default title */
+.award-card h3 {
+  margin-bottom: .5rem;
+  font-weight: 700;
+}
+
+/* ===== Award Headshot Layout ===== */
+
+/* Wrapper circle */
+.award-headshot-wrap {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+}
+
+.award-headshot {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+
+  object-fit: cover;
+  object-position: bottom center;
+}
+
+
+/* Player name */
+.award-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-top: 4px;
+}
+
+/* Position text */
+.award-position {
+  font-size: .85rem;
+  opacity: .7;
+  margin-bottom: 6px;
+}
+
+/* Team logo */
+.award-team img.logo {
+  height: 28px;
+  margin: 6px auto;
+  display: block;
+}
+
+/* Stats line */
+.award-stats {
+  font-size: .85rem;
+  opacity: .85;
+  margin-top: 6px;
+}
+
+
+/* =========================
+   Row-specific scaling
+========================= */
+
+/* Row 1 - Big Awards */
+.row-big .award-card h3 {
+  font-size: 1.4rem;
+}
+
+.row-big .award-headshot-wrap {
+  width: 140px;
+  height: 140px;
+}
+
+.row-big .award-name {
+  font-size: 1.2rem;
+}
+
+
+/* Row 2 - Medium Awards */
+.row-medium .award-card h3 {
+  font-size: 1.1rem;
+}
+
+/* Row 3/4 - Positional */
+.row-small .award-card h3 {
+  font-size: .95rem;
+}
+
+.row-small .award-player {
+  font-size: .9rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 1000px) {
+  .award-row.row-5 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .award-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+
+
+/* === Standings === */
+.standings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(420px, 1fr));
+  gap: 1rem;
+}
+@media (max-width: 1200px){ .standings-grid { grid-template-columns: 1fr; } }
+
+.standings-card { background:#1e1e1e; border-radius:8px; overflow:hidden; }
+.standings-card h3 { margin:0; padding:.75rem 1rem; border-bottom:1px solid #333; font-size:1rem; }
+.standings-card table { width:100%; border-collapse:collapse; }
+.standings-card th, .standings-card td {
+  padding:.5rem .6rem; border-bottom:1px solid #2a2a2a; font-size:.95rem; text-align:left;
+}
+.standings-card td.num, .standings-card th.num { text-align:right; white-space:nowrap; }
+.standings-card tr:last-child td { border-bottom:none; }
+.standings-card .empty { padding:1rem; color:#aaa; font-size:.9rem; }
+
+/* Fix layout without breaking tabs */
+.stats-page > section.tab {
+  display: block;
+}
+
+.stats-page > section.tab[hidden] {
+  display: none;
+}
+
+
