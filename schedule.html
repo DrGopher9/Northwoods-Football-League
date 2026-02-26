@@ -2,289 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Games</title>
-<link rel="stylesheet" href="css/reset.css">
-<link rel="stylesheet" href="css/colors.css">
-<link rel="stylesheet" href="css/layout.css">
-<link rel="stylesheet" href="css/navbar.css">
-<link rel="stylesheet" href="css/components.css">
-<link rel="stylesheet" href="css/home.css">
-<link rel="stylesheet" href="css/team.css">
-<link rel="stylesheet" href="css/game.css">
-<link rel="stylesheet" href="css/schedule.css">
-<link rel="stylesheet" href="css/media.css">
+  <title>Schedule | Northwoods Football League</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/schedule.css">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-body {
-      background-color: #121212;
-      color: #e0e0e0;
-      font-family: 'Roboto Condensed', sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-
-    nav {
-      display: flex;
-      justify-content: center;
-      background-color: #181818;
-      padding: 0.5rem;
-      gap: 2rem;
-    }
-
-    nav a {
-      color: #e0e0e0;
-      text-decoration: none;
-      font-weight: bold;
-      transition: color 0.3s;
-    }
-
-     a:hover {
-      color: #90caf9;
-    }
-
-    .scores-carousel {
-      padding: 1rem;
-      background-color: #1e1e1e;
-      border-bottom: 1px solid #333;
-    }
-
-    .scores-carousel ul {
-      display: inline-flex;
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .scores-carousel li {
-      background-color: #2a2a2a;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: background-color 0.3s ease;
-    }
-
-    .scores-carousel li:hover {
-      background-color: #3a3a3a;
-    }
-
-    .scores-carousel img {
-      height: 24px;
-      width: 24px;
-      object-fit: contain;
-    }
-
-    .grid-container {
-      display: grid;
-      grid-template-columns: 1fr 2fr 1fr;
-      gap: 1rem;
-      padding: 1rem;
-    }
-
-    .column, .center {
-      background-color: #1e1e1e;
-      padding: 1rem;
-      border-radius: 10px;
-      border: 1px solid #333;
-    }
-
-    h2 {
-      border-bottom: 1px solid #444;
-      padding-bottom: 0.5rem;
-      margin-top: 0;
-    }
-
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    .team-row {
-      display: flex;
-      align-items: center;
-      margin-bottom: 0.5rem;
-    }
-
-    .team-row img {
-      height: 24px;
-      margin-right: 0.5rem;
-    }
-
-    .team-row:first-child {
-      font-weight: bold;
-      color: #90caf9;
-    }
-
-    .game-of-the-week {
-      text-align: center;
-      background-color: #292929;
-      border: 1px solid #444;
-      padding: 1.5rem 1rem;
-      border-radius: 12px;
-      margin-bottom: 2rem;
-    }
-
-    .players-of-week {
-      text-align: center;
-    }
-
-    .players-of-week h2 {
-      margin-bottom: 1rem;
-    }
-
-    .potw-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-    }
-
-    .potw-card {
-      background: #2a2a2a;
-      padding: 1rem;
-      border-radius: 10px;
-      width: 45%;
-      min-width: 200px;
-      transition: transform 0.2s ease, background-color 0.2s ease;
-    }
-
-    .potw-card:hover {
-      background-color: #333;
-      transform: translateY(-2px);
-    }
-
-    @media (max-width: 800px) {
-      .grid-container {
-        grid-template-columns: 1fr;
-      }
-
-      .potw-card {
-        width: 100%;
-      }
-    }
-
-/* Button & Nav Enhancements */
-nav {
-      display: flex;
-      justify-content: center;
-      background-color: #181818;
-      padding: 0.5rem;
-      gap: 2rem;
-    }
-
-nav a {
-      color: #e0e0e0;
-      text-decoration: none;
-      font-weight: bold;
-      transition: color 0.3s;
-    }
-
-
-
-
-.team-logo {
-  height: 36px;
-  width: 36px;
-  object-fit: contain;
-  display: inline-block;
-}
-
-
-
-
-.game-card {
-  background: #1e1e1e;
-  padding: 0.75rem 0.5rem;
-  border-radius: 10px;
-  margin-bottom: 1rem;
-  border: 1px solid #333;
-  transition: background-color 0.2s ease;
-  max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-}
-
-
-.game-card:hover {
-  background-color: #292929;
-}
-
-
-
-.score-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1.25rem;
-  padding: 0.5rem 0;
-}
-
-.score-text {
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #e0e0e0;
-}
-
-.score-meta {
-  text-align: center;
-  font-size: 0.875rem;
-  color: #bbb;
-  margin-top: 0.25rem;
-}
-
-
-.game-card {
-  background: #1e1e1e;
-  padding: 0.75rem 0.5rem;
-  border-radius: 10px;
-  margin-bottom: 1rem;
-  border: 1px solid #333;
-  transition: background-color 0.2s ease;
-  max-width: 500px;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-}
-
-
-
-
-select {
-  background-color: #2a2a2a;
-  color: #e0e0e0;
-  border: 1px solid #444;
-  border-radius: 6px;
-  padding: 0.5rem;
-  font-size: 1rem;
-}
-
-label {
-  font-weight: bold;
-  margin-right: 0.5rem;
-}
-
-
-
-.view-link {
-  display: inline-block;
-  margin-top: 0.75rem;
-  font-size: 0.9rem;
-  color: #90caf9;
-  text-decoration: none;
-}
-
-.view-link:hover {
-  text-decoration: underline;
-}
-
-</style>
 </head>
 <body>
+  
   <nav class="navbar">
     <div class="navbar-left">
       <img src="images/logos/NWFLlogo.png" alt="NWFL Logo" class="nwfl-logo" width="40" height="40" decoding="async" />
@@ -294,14 +21,14 @@ label {
     <label for="menu-toggle" class="hamburger">&#9776;</label>
     <ul class="navbar-links">
       <li><a href="index.html">Home</a></li>
-      <li><a href="schedule.html">Schedule</a></li>
+      <li><a href="schedule.html" class="active">Schedule</a></li>
       <li class="dropdown">
         <a href="coaches.html">Teams</a>
         <ul class="dropdown-content" id="teamDropdown"></ul>
       </li>
       <li><a href="stats.html">Stats</a></li>
       <li><a href="trade.html">Trade Calc</a></li>
-      <li><a href="#">Rules</a></li>
+      <li><a href="rules.html">Rules</a></li>
       <li class="dropdown">
         <a href="#">Watch</a>
         <ul class="dropdown-content">
@@ -314,43 +41,50 @@ label {
     </ul>
   </nav>
 
+  <main class="schedule-wrapper">
+    <header class="schedule-header-title">
+      <h1>League Schedule</h1>
+    </header>
 
-  <h1 style="text-align:center; font-size: 2rem; margin-bottom: 1.5rem;">Schedule</h1>
+    <section class="controls-panel">
+      <div class="filter-group">
+        <label for="seasonFilter">Season</label>
+        <select id="seasonFilter" disabled><option>Loading...</option></select>
+      </div>
+      
+      <div class="filter-group">
+        <label for="typeFilter">Type</label>
+        <select id="typeFilter">
+          <option value="reg">Regular Season</option>
+          <option value="pre">Preseason</option>
+          <option value="post">Postseason</option>
+        </select>
+      </div>
 
-  
-  <div class="filter-section" style="text-align:center; margin-bottom:2rem;">
-   <label for="seasonFilter">Season:</label>
-<select id="seasonFilter"></select>
+      <div class="filter-group">
+        <label for="weekFilter">Week</label>
+        <select id="weekFilter" disabled><option>Loading...</option></select>
+      </div>
 
-<label for="weekFilter">Week:</label>
-<select id="weekFilter"></select>
+      <div class="filter-group">
+        <label for="teamFilter">Team</label>
+        <select id="teamFilter">
+          <option value="">All Teams</option>
+          </select>
+      </div>
+    </section>
 
-<label for="teamFilter">Team:</label>
-<select id="teamFilter">
-  <option value="">All Teams</option>
-</select>
+    <div id="schedule-loader" class="loader-state">LOADING GAMES...</div>
 
-<label for="typeFilter">Type:</label>
-<select id="typeFilter">
-  <option value="reg">Regular Season</option>
-  <option value="pre">Preseason</option>
-</select>
-  </div>
-
-
-  <div id="gamesContainer"></div>
-
+    <div id="gamesContainer" class="games-grid"></div>
+  </main>
 
   <footer class="site-footer">
-  <p>
-    Copyright © Northwoodsfblg.com, 2025. This site is not recognized, sponsored, endorsed or affiliated with the National Football League (NFL), National Football League Players' Association (NFLPA), Microsoft, Xbox, Sony Corporation, Playstation or EA Sports. All NFL team logos are registered trademarks of the NFL and their respective clubs.
-  </p>
-</footer>
+    <p>Copyright © Northwoodsfblg.com, 2025. This site is not recognized, sponsored, endorsed or affiliated with the NFL or EA Sports.</p>
+  </footer>
   
-    <script type="module" src="scripts/authWidget.js"></script>
-  <script type="module" src="scripts/teamInfoConstants.js"></script>
-<script type="module" src="scripts/schedule.js"></script>
-<script type="module" src="scripts/navbar.js"></script>
-<script src="scripts/main.js"></script>
+  <script type="module" src="scripts/authWidget.js"></script>
+  <script type="module" src="scripts/navbar.js"></script>
+  <script type="module" src="scripts/schedule.js"></script>
 </body>
 </html>
