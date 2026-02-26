@@ -100,7 +100,8 @@ body {
 /* --- Games Grid --- */
 .games-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 400px)); /* Locks max width */
+  justify-content: center; /* Centers the cards if they don't fill the row */
   gap: 1.5rem;
 }
 
