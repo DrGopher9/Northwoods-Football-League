@@ -15,10 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
 async function initHomePage() {
   const loader = document.getElementById("global-loader");
   const content = document.getElementById("main-content");
-  const scoresSection = document.getElementById("top-scores-section");
 
   try {
-    // Fetch all necessary data concurrently, exactly once
     const [teamsSnap, scheduleSnap] = await Promise.all([
       get(ref(db, `${LEAGUE_PATH}/teams`)),
       get(ref(db, `${LEAGUE_PATH}/schedules/reg`))
@@ -31,16 +29,11 @@ async function initHomePage() {
     const teams = teamsSnap.val();
     const schedules = scheduleSnap.val();
 
-    // 1. Process Scores Carousel
     processScores(teams, schedules);
-    
-    // 2. Process Main Content
     renderPlayoffPicture(teams);
     renderGameOfTheWeek(teams, schedules);
     
-    // Smooth transition from loader to content
     loader.style.display = "none";
-    scoresSection.style.display = "block";
     content.classList.add("visible");
 
   } catch (error) {
@@ -50,9 +43,10 @@ async function initHomePage() {
 }
 
 // --- SCORE CAROUSEL LOGIC ---
-
 function processScores(teams, schedules) {
-  // Find the latest week
+  const scoresSection = document.getElementById("top-scores-section");
+  
+  // Find the latest week numerically
   const weeks = Object.keys(schedules).map(Number).filter(n => !isNaN(n));
   const latestWeek = weeks.length ? Math.max(...weeks) : null;
 
@@ -60,17 +54,22 @@ function processScores(teams, schedules) {
 
   const weekGames = schedules[latestWeek];
   
-  recentGames = Object.values(weekGames).map(game => {
+  // Filter out any null/undefined entries Firebase might return
+  const validGames = Object.values(weekGames).filter(g => g && g.homeTeamId && g.awayTeamId);
+
+  recentGames = validGames.map(game => {
     return {
       game,
       homeTeam: teams[game.homeTeamId]?.meta,
       awayTeam: teams[game.awayTeamId]?.meta
     };
-  }).filter(g => g.homeTeam && g.awayTeam); // Only keep valid match-ups
+  }).filter(g => g.homeTeam && g.awayTeam);
 
-  renderScoresCarousel();
+  if (recentGames.length > 0) {
+    scoresSection.style.display = "block"; // Make it visible if we have games!
+    renderScoresCarousel();
+  }
   
-  // Hook up buttons
   document.getElementById("prevScores").addEventListener("click", () => {
     if (currentPage > 0) {
       currentPage--;
@@ -115,13 +114,11 @@ function renderScoresCarousel() {
     container.appendChild(card);
   });
 
-  // Update button states
   document.getElementById("prevScores").disabled = currentPage === 0;
   document.getElementById("nextScores").disabled = (currentPage + 1) * pageSize >= recentGames.length;
 }
 
 // --- MAIN CONTENT LOGIC ---
-
 function renderPlayoffPicture(teamsData) {
   const teams = [];
   
@@ -173,8 +170,11 @@ function renderGameOfTheWeek(teams, schedules) {
   let minDiff = Infinity;
 
   Object.entries(schedules).forEach(([week, games]) => {
-    games.forEach((game) => {
-      if (game.status === 2) {
+    // Convert to array to handle Firebase objects securely
+    const gamesArray = Array.isArray(games) ? games : Object.values(games);
+    
+    gamesArray.forEach((game) => {
+      if (game && game.status === 2) {
         const home = teams[game.homeTeamId];
         const away = teams[game.awayTeamId];
         if (!home?.meta || !away?.meta) return;
