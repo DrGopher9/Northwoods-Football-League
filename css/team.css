@@ -336,3 +336,90 @@
   .team-quick-stats { justify-content: center; }
   .team-tabs { flex-wrap: wrap; justify-content: center; }
 }
+
+/* ============================================================
+   DEPTH CHART STYLES 
+============================================================ */
+.depth-chart-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.depth-header {
+  color: var(--team-accent);
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  font-size: 1.4rem;
+}
+
+.depth-position-group {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.depth-position-title {
+  background: var(--bg-surface-hover);
+  padding: 0.5rem 1rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.depth-player-row {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px dashed var(--border-color);
+  transition: background 0.2s;
+}
+
+.depth-player-row:last-child {
+  border-bottom: none;
+}
+
+.depth-player-row:hover {
+  background: rgba(255,255,255,0.02);
+}
+
+.depth-rank {
+  width: 30px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.depth-name {
+  flex: 1;
+  font-weight: 700;
+  color: var(--text-main);
+  text-decoration: none;
+}
+
+.depth-name:hover {
+  color: var(--team-accent);
+  text-decoration: underline;
+}
+
+.depth-ovr {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 800px) {
+  .depth-chart-container {
+    grid-template-columns: 1fr;
+  }
+}
