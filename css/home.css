@@ -1,603 +1,199 @@
-/* =================================================================
-   css/home.css — NWFL Home Page Styles
-   Only home-page-specific components. Global base styles live in
-   reset.css, layout.css, and colors.css.
-   ================================================================= */
+/* css/home.css */
 
-/* ── SKELETON LOADING ─────────────────────────────────────────────
-   Shimmer animation used by JS while Firebase data is in-flight.
-   ----------------------------------------------------------------- */
-@keyframes skeleton-shimmer {
-  0%   { background-position: -600px 0; }
-  100% { background-position:  600px 0; }
-}
-
-.skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--bg-card)   0%,
-    var(--bg-hover)  50%,
-    var(--bg-card)  100%
-  );
-  background-size: 1200px 100%;
-  animation: skeleton-shimmer 1.5s infinite linear;
-  border-radius: var(--r);
+:root {
+  --bg-base: #09090b;
+  --bg-surface: #18181b;
+  --bg-surface-hover: #27272a;
+  --accent-blue: #3b82f6;
+  --accent-glow: rgba(59, 130, 246, 0.4);
+  --text-main: #f4f4f5;
+  --text-muted: #a1a1aa;
+  --border-color: #27272a;
 }
 
-/* ── SCORE CAROUSEL ───────────────────────────────────────────────
-   Horizontally-scrolling strip of latest game score cards.
-   ----------------------------------------------------------------- */
-.scores-strip {
-  display: flex;
-  gap: 0.65rem;
-  padding: 0.75rem 1rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--border);
-  /* Smooth momentum scrolling on iOS */
-  -webkit-overflow-scrolling: touch;
-}
-.scores-strip::-webkit-scrollbar { display: none; }
-
-/* Individual game card */
-.score-card {
-  flex: 0 0 auto;
-  width: 165px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 0.6rem 0.75rem;
-  cursor: pointer;
-  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-}
-.score-card:hover {
-  border-color: var(--border-mid);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
-}
-.score-card:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+body {
+  background-color: var(--bg-base);
+  color: var(--text-main);
+  font-family: 'Roboto Condensed', sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
 }
 
-/* Skeleton score card */
-.score-card--skeleton { cursor: default; pointer-events: none; }
-.score-card--skeleton .skel-circle {
-  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
-}
-.score-card--skeleton .skel-bar {
-  height: 13px; border-radius: 4px; flex: 1; margin-left: 6px;
-}
-.score-card--skeleton .skel-num {
-  width: 26px; height: 13px; border-radius: 4px; margin-left: 4px;
-}
-
-/* Team row within a card */
-.score-row {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.18rem 0;
-}
-.score-row + .score-row { margin-top: 3px; }
-
-.score-logo {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-
-.score-team {
-  flex: 1;
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: var(--text-1);
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.score-value {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  letter-spacing: 0.06em;
-  color: var(--text-3);
-  min-width: 26px;
-  text-align: right;
-}
-.score-winner { color: var(--clr-win); }
-
-/* Error/empty state inside carousel */
-.scores-error {
-  align-self: center;
-  padding: 0 0.5rem;
-  color: var(--text-3);
-  font-size: 0.88rem;
-  white-space: nowrap;
-}
-
-/* ── CAROUSEL CONTROLS ────────────────────────────────────────────
-   Prev / Next buttons centred below the carousel strip.
-   ----------------------------------------------------------------- */
-.carousel-controls {
+/* Loader Styles */
+#global-loader {
   display: flex;
   justify-content: center;
-  gap: 0.65rem;
-  padding: 0.45rem 1rem;
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--border);
-}
-
-.carousel-controls button {
-  background: var(--bg-card);
-  color: var(--text-2);
-  border: 1px solid var(--border);
-  padding: 0.3rem 1rem;
-  border-radius: var(--r);
-  font-family: var(--font-ui);
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  transition: background 0.18s, color 0.18s, border-color 0.18s;
-}
-.carousel-controls button:hover:not(:disabled) {
-  background: var(--bg-hover);
-  color: var(--text-1);
-  border-color: var(--border-mid);
-}
-.carousel-controls button:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-/* ── HOME PAGE GRID ───────────────────────────────────────────────
-   Three-column layout: [playoff sidebar | center | news sidebar]
-   ----------------------------------------------------------------- */
-.home-page-grid {
-  display: grid;
-  grid-template-columns: 264px 1fr 272px;
-  gap: 1rem;
-  padding: 1rem 1rem 2.5rem;
-  max-width: 1640px;
-  margin: 0 auto;
-  align-items: start;
-}
-
-/* ── PLAYOFF PICTURE (LEFT SIDEBAR) ──────────────────────────────
-   Two stacked conference cards.
-   ----------------------------------------------------------------- */
-.playoff-picture {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.playoff-box {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 0.85rem 0.9rem;
-}
-
-.playoff-box__title {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  letter-spacing: 0.08em;
-  color: var(--accent-light);
+  align-items: center;
+  min-height: 50vh;
+  font-size: 1.2rem;
+  color: var(--accent-blue);
+  letter-spacing: 2px;
   text-transform: uppercase;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 0.45rem;
-  margin-bottom: 0.55rem;
 }
 
-/* Seed list */
-.playoff-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
+/* Hide content until loaded */
+#main-content {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+#main-content.visible {
+  display: grid;
+  opacity: 1;
 }
 
-/* Each team entry */
+/* Main Grid Layout */
+.grid-container {
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 1.5rem;
+  padding: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Reusable Card Styles */
+.card-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+.card-box h2 {
+  color: var(--accent-blue);
+  text-transform: uppercase;
+  font-size: 1.4rem;
+  margin-top: 0;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 0.5rem;
+  letter-spacing: 1px;
+}
+
+/* Playoff Picture */
 .playoff-team {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.28rem 0.35rem;
-  border-radius: var(--r-sm);
-  transition: background 0.15s;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background 0.2s ease;
 }
-.playoff-team:hover { background: var(--bg-hover); }
+
+.playoff-team:hover {
+  background: var(--bg-surface-hover);
+}
 
 .playoff-team .seed {
-  font-family: var(--font-display);
-  font-size: 0.88rem;
-  color: var(--accent);
-  width: 1.2rem;
-  text-align: center;
-  flex-shrink: 0;
+  font-weight: bold;
+  color: var(--accent-blue);
+  min-width: 1.5rem;
 }
 
-.playoff-team img.team-logo {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-
-.playoff-team .team-link {
-  font-size: 0.84rem;
-  font-weight: 700;
-  color: var(--text-1);
-  text-decoration: none;
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.playoff-team .team-link:hover { color: var(--accent-light); }
-
-/* Record text appended by JS */
-.playoff-team .record {
-  font-size: 0.78rem;
-  color: var(--text-3);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-/* Division winners get a left accent bar */
 .playoff-team.division-winner {
-  border-left: 2px solid var(--accent);
-  padding-left: 0.2rem;
+  border-left: 3px solid var(--accent-blue);
+  background: rgba(59, 130, 246, 0.05);
 }
 
-.hunt-heading {
-  font-size: 0.72rem;
+.team-link {
+  color: var(--text-main);
+  text-decoration: none;
   font-weight: 700;
-  color: var(--text-3);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin: 0.7rem 0 0.3rem;
-  padding-top: 0.45rem;
-  border-top: 1px solid var(--border);
+  transition: color 0.2s;
 }
 
-.hunt-list .playoff-team { opacity: 0.7; }
-
-/* Skeleton rows while loading */
-.playoff-skeleton-row {
-  height: 26px;
-  border-radius: var(--r-sm);
-  margin-bottom: 0.18rem;
+.team-link:hover {
+  color: var(--accent-blue);
 }
 
-/* ── HOME CENTER COLUMN ───────────────────────────────────────────
-   Game of the Week + Players of the Week stacked vertically.
-   ----------------------------------------------------------------- */
-.home-center {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.record {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-left: auto;
 }
 
-/* Shared section heading */
-.section-heading {
-  font-family: var(--font-display);
-  font-size: 1.35rem;
-  letter-spacing: 0.07em;
-  color: var(--text-1);
-  text-transform: uppercase;
-  margin: 0 0 0.75rem;
-}
-
-/* ── GAME OF THE WEEK ─────────────────────────────────────────────
-   Dramatic hero card. JS selectors:
-     .game-of-the-week h2  (or #gotwTitle)
-     .left-team .team-logo / .right-team .team-logo
-     #awayCity, #awayName, #awayUser, #awayScore
-     #homeCity, #homeName, #homeUser, #homeScore
-     #gotwLink
-   ----------------------------------------------------------------- */
-.game-of-the-week {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 1rem 1.1rem 1.1rem;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Subtle electric-blue top bar */
-.game-of-the-week::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent 0%, var(--accent) 40%, var(--accent-light) 60%, transparent 100%);
-}
-
-.gotw-section__heading {
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  letter-spacing: 0.1em;
-  color: var(--text-2);
-  text-transform: uppercase;
-  text-align: center;
-  margin: 0 0 1rem;
-}
-
-/* Three-column flex: [away] [score] [home] */
+/* Game of the Week Card */
 .gotw-card {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-}
-
-/* Team side (shared by .left-team and .right-team) */
-.gotw-card .team {
-  flex: 1;
-  display: flex;
   align-items: center;
-  gap: 0.75rem;
-  min-width: 0;
+  background: linear-gradient(145deg, #18181b, #09090b);
+  border: 1px solid var(--border-color);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 20px var(--accent-glow);
 }
 
-.gotw-card .right-team {
-  flex-direction: row-reverse;
-}
-
-/* Large logo inside GOTW card */
-.gotw-card .team-logo {
-  width: 80px;
+.team-logo {
   height: 80px;
+  width: 80px;
   object-fit: contain;
-  flex-shrink: 0;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
 }
 
-.gotw-team-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  min-width: 0;
-}
-.gotw-team-info.left-align  { align-items: flex-start; text-align: left; }
-.gotw-team-info.right-align { align-items: flex-end;   text-align: right; }
-
-.team-city {
-  font-size: 0.72rem;
-  color: var(--text-3);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.gotw-team-name {
-  font-family: var(--font-display);
-  font-size: 1.55rem;
-  letter-spacing: 0.03em;
-  color: var(--text-1);
-  text-decoration: none;
-  line-height: 1;
-  transition: color 0.18s;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 160px;
-}
-.gotw-team-name:hover { color: var(--accent-light); }
-
-.team-user {
-  font-size: 0.82rem;
-  color: var(--text-2);
-}
-
-/* Score centre */
 .gotw-score-box {
-  flex-shrink: 0;
   text-align: center;
+  font-size: 2.5rem;
+  font-weight: bold;
 }
 
 .gotw-score-box a {
+  color: var(--text-main);
+  text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  text-decoration: none;
-  padding: 0.5rem 0.6rem;
-  border-radius: var(--r-md);
-  transition: background 0.18s;
-}
-.gotw-score-box a:hover { background: var(--bg-hover); }
-
-#awayScore,
-#homeScore {
-  font-family: var(--font-display);
-  font-size: 3.2rem;
-  letter-spacing: 0.04em;
-  color: var(--text-1);
-  line-height: 1;
+  gap: 1rem;
 }
 
-.vs {
-  font-size: 0.82rem;
-  color: var(--text-3);
-  font-weight: 700;
-  letter-spacing: 0.15em;
+.gotw-score-box .vs {
+  font-size: 1.2rem;
+  color: var(--text-muted);
   text-transform: uppercase;
 }
 
-/* Loading / error state while GOTW fetches */
-.gotw-loading {
-  text-align: center;
-  padding: 2rem 1rem;
-  color: var(--text-3);
-  font-size: 0.9rem;
-}
-
-/* ── PLAYERS OF THE WEEK ──────────────────────────────────────────
-   2×2 grid of award cards.
-   ----------------------------------------------------------------- */
-.potw-section {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  padding: 1.1rem 1rem;
-}
-
+/* Players of the Week */
 .potw-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.65rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
 }
 
 .potw-card {
   background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 0.9rem 0.75rem;
+  border: 1px solid var(--border-color);
+  padding: 1.5rem;
+  border-radius: 10px;
   text-align: center;
-  transition: border-color 0.18s, background 0.18s, transform 0.2s;
-}
-.potw-card:hover {
-  background: var(--bg-hover);
-  border-color: var(--border-mid);
-  transform: translateY(-2px);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.potw-logo {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-  margin-bottom: 0.4rem;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+.potw-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-blue);
 }
 
 .potw-card h3 {
-  font-size: 0.74rem;
-  font-weight: 700;
-  color: var(--accent-light);
-  letter-spacing: 0.1em;
+  font-size: 1rem;
+  color: var(--text-muted);
   text-transform: uppercase;
-  margin: 0 0 0.4rem;
-  border-bottom: none;
-  padding-bottom: 0;
+  margin-bottom: 0.5rem;
 }
 
-.potw-card p {
-  font-size: 0.9rem;
-  color: var(--text-1);
-  margin: 0;
+.potw-card p:nth-of-type(1) {
   font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--text-main);
 }
 
-.potw-stats {
-  font-size: 0.8rem !important;
-  color: var(--text-2) !important;
-  font-weight: 400 !important;
-  margin-top: 0.2rem !important;
-}
-
-/* ── LEAGUE NEWS (RIGHT SIDEBAR) ──────────────────────────────────
-   Simple card containing a list of news items.
-   ----------------------------------------------------------------- */
-.home-news {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 1rem;
-}
-
-.home-news .section-heading {
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.news-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-.news-empty {
-  color: var(--text-3);
-  font-size: 0.88rem;
-  padding: 0.25rem 0;
-}
-
-/* ── RESPONSIVE ───────────────────────────────────────────────────
-   Breakpoints: 1200px → tighten columns
-                960px  → 2-col grid, playoffs span full width
-                640px  → single-column stack
-   ----------------------------------------------------------------- */
-@media (max-width: 1200px) {
-  .home-page-grid {
-    grid-template-columns: 240px 1fr 250px;
-    gap: 0.85rem;
-  }
-}
-
-@media (max-width: 960px) {
-  .home-page-grid {
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "playoff playoff"
-      "center  news";
-  }
-  .playoff-picture {
-    grid-area: playoff;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-  .playoff-box    { flex: 1 1 calc(50% - 0.4rem); }
-  .home-center    { grid-area: center; }
-  .home-news      { grid-area: news; }
-}
-
-@media (max-width: 640px) {
-  .home-page-grid {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "playoff"
-      "center"
-      "news";
-    padding: 0.75rem 0.75rem 2rem;
-    gap: 0.75rem;
-  }
-  .playoff-box {
-    flex: 1 1 100%;
-  }
-  .gotw-card {
-    flex-direction: column;
-    gap: 0.5rem;
-    text-align: center;
-  }
-  .gotw-card .team,
-  .gotw-card .right-team {
-    flex-direction: column;
-    align-items: center;
-    gap: 0.4rem;
-  }
-  .gotw-team-info.left-align,
-  .gotw-team-info.right-align {
-    align-items: center;
-    text-align: center;
-  }
-  .gotw-team-name { max-width: 200px; }
-  #awayScore, #homeScore { font-size: 2.5rem; }
-  .potw-grid { grid-template-columns: 1fr 1fr; }
-  .score-card { width: 145px; }
+.potw-card p:nth-of-type(2) {
+  color: var(--accent-blue);
+  font-size: 0.95rem;
 }
