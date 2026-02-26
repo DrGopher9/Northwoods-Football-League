@@ -1,1 +1,55 @@
-<!-- Use for later -->
+/* =================================================================
+   css/colors.css — NWFL Design System Tokens
+   Imported on every page. All CSS custom properties live here.
+   ================================================================= */
+:root {
+  /* ── Backgrounds ──────────────────────────────────────────────── */
+  --bg:          #0a0b0f;
+  --bg-surface:  #10121a;
+  --bg-card:     #141720;
+  --bg-hover:    #1a1f2e;
+  --bg-input:    #0d0f16;
+
+  /* ── Borders ──────────────────────────────────────────────────── */
+  --border:       rgba(255, 255, 255, 0.07);
+  --border-mid:   rgba(255, 255, 255, 0.12);
+  --border-focus: rgba(59, 130, 246, 0.5);
+
+  /* ── Accent / Brand ───────────────────────────────────────────── */
+  --accent:        #3b82f6;
+  --accent-light:  #60a5fa;
+  --accent-dim:    rgba(59, 130, 246, 0.12);
+  --accent-glow:   0 0 20px rgba(59, 130, 246, 0.25);
+
+  /* ── Text ─────────────────────────────────────────────────────── */
+  --text-1: #eef2ff;
+  --text-2: #94a3b8;
+  --text-3: #4b5878;
+
+  /* ── Status ───────────────────────────────────────────────────── */
+  --clr-win:  #22c55e;
+  --clr-loss: #ef4444;
+  --clr-tie:  #f59e0b;
+
+  /* ── Typography ───────────────────────────────────────────────── */
+  --font-display: 'Bebas Neue', 'Roboto Condensed', sans-serif;
+  --font-ui:      'Roboto Condensed', sans-serif;
+
+  /* ── Radius ───────────────────────────────────────────────────── */
+  --r-sm:  4px;
+  --r:     8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+
+  /* ── Shadows ──────────────────────────────────────────────────── */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow:    0 4px 16px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.7);
+
+  /* ── Layout ───────────────────────────────────────────────────── */
+  --navbar-h: 56px;
+
+  /* ── Aliases (used by admin.html / components.css) ────────────── */
+  --surface:     var(--bg-card);
+  --team-accent: var(--accent);
+}
