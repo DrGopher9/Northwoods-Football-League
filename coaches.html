@@ -2,44 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Coaches</title>
+  <title>Teams Directory | Northwoods Football League</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
   <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/colors.css">
-  <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/navbar.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/media.css">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    .wrap { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
-    .card { background: var(--surface, #1b1b1b); border: 1px solid #2a2a2a; border-radius: 12px; padding: 1rem; }
-    .coaches-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
-    .coaches-table thead th {
-      text-align: left; background: #0f0f0f; color: #eaeaea; border-bottom: 2px solid #2d2d2d; padding: .6rem .75rem;
-    }
-    .coaches-table tbody td {
-      border-bottom: 1px solid #262626; padding: .55rem .75rem; vertical-align: middle;
-    }
-    .team-cell { display: flex; align-items: center; gap: .5rem; }
-    .team-logo { width: 28px; height: 28px; border-radius: 4px; object-fit: contain; background: #111; }
-    .team-link { color: #d6e4ff; text-decoration: none; }
-    .team-link:hover { text-decoration: underline; }
-    .mini-note { opacity: .8; margin: .25rem 0 0; font-size: .9rem; }
-    /* Make Broadcast column links the same light blue as your headings */
-.coaches-table tbody td:nth-child(4) a,
-.coaches-table tbody td:nth-child(4) a:visited {
-  color: #8ecbff;           /* tweak if your heading uses a different hex */
-}
-.coaches-table tbody td:nth-child(4) a:hover {
-  color: #bfe2ff;
-  text-decoration: underline;
-}
-  </style>
-  <script type="module" src="scripts/firebaseConfig.js"></script>
-  <script type="module" src="scripts/coachesPage.js"></script>
+  <link rel="stylesheet" href="css/team.css"> <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+  
   <nav class="navbar">
     <div class="navbar-left">
       <img src="images/logos/NWFLlogo.png" alt="NWFL Logo" class="nwfl-logo" width="40" height="40" decoding="async" />
@@ -51,12 +22,12 @@
       <li><a href="index.html">Home</a></li>
       <li><a href="schedule.html">Schedule</a></li>
       <li class="dropdown">
-        <a href="coaches.html">Teams</a>
+        <a href="coaches.html" class="active">Teams</a>
         <ul class="dropdown-content" id="teamDropdown"></ul>
       </li>
       <li><a href="stats.html">Stats</a></li>
       <li><a href="trade.html">Trade Calc</a></li>
-      <li><a href="#">Rules</a></li>
+      <li><a href="rules.html">Rules</a></li>
       <li class="dropdown">
         <a href="#">Watch</a>
         <ul class="dropdown-content">
@@ -69,34 +40,25 @@
     </ul>
   </nav>
 
-  <main class="wrap">
-    <div class="card">
-      <h2>Coaches</h2>
-      <p class="mini-note">Click a team to view its page. Broadcast becomes a link when a URL is set in Admin.</p>
+  <div id="global-loader" class="loader-state" style="text-align: center; padding: 4rem; color: #3b82f6; font-size: 1.2rem; letter-spacing: 2px;">
+    LOADING LEAGUE DIRECTORY...
+  </div>
 
-      <table class="coaches-table" id="coachesTable">
-        <thead>
-          <tr>
-            <th>Coach</th>
-            <th>Team</th>
-            <th>GT/PSN</th>
-            <th>Broadcast</th>
-            <th>Timezone</th>
-          </tr>
-        </thead>
-        <tbody id="coachesTbody">
-          <!-- rows injected by JS -->
-        </tbody>
-      </table>
+  <main id="main-content" class="directory-wrap" style="display: none;">
+    <div class="directory-header">
+      <h1>League Directory</h1>
+      <p class="mini-note">Select a team to view their hub, stats, and roster.</p>
     </div>
+
+    <div class="coaches-grid" id="coachesGrid"></div>
   </main>
+
+  <footer class="site-footer">
+    <p>Copyright © Northwoodsfblg.com, 2025. This site is not recognized, sponsored, endorsed or affiliated with the NFL or EA Sports.</p>
+  </footer>
+
   <script type="module" src="scripts/authWidget.js"></script>
   <script type="module" src="scripts/navbar.js"></script>
-  <script src="scripts/main.js"></script>
-  <footer class="site-footer">
-  <p>
-    Copyright © Northwoodsfblg.com, 2025. This site is not recognized, sponsored, endorsed or affiliated with the National Football League (NFL), National Football League Players' Association (NFLPA), Microsoft, Xbox, Sony Corporation, Playstation or EA Sports. All NFL team logos are registered trademarks of the NFL and their respective clubs.
-  </p>
-</footer>
+  <script type="module" src="scripts/coachesPage.js?v=2"></script>
 </body>
 </html>
