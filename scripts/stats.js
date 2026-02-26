@@ -681,14 +681,26 @@ onAuthStateChanged(auth, async (user) => {
   } catch (e) { console.error(e); }
 });
 
-// Initial render
+// Initial render with Loader Logic
 (async function init() {
-  renderAllCards();
-  renderStandingsCards();       // NEW
-  renderAwards();
-  await loadSeasons();
-  await refreshTables();
-  await refreshStandings();     // NEW
-  await refreshAwards();
+  const loader = document.getElementById("global-loader");
+  const content = document.getElementById("main-content");
+
+  try {
+    renderAllCards();
+    renderStandingsCards();     
+    renderAwards();
+    await loadSeasons();
+    await refreshTables();
+    await refreshStandings();   
+    await refreshAwards();
+    
+    // Hide loader and show content
+    loader.style.display = "none";
+    content.style.display = "block";
+  } catch (e) {
+    console.error("Error loading stats data:", e);
+    loader.innerHTML = `<div style="color: #f44336;">Error loading stats data. Check console.</div>`;
+  }
 })();
 
