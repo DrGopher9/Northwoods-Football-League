@@ -2,133 +2,209 @@ import { db } from "./firebaseConfig.js";
 import { ref, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 import { TEAM_INFO } from "./teamInfoConstants.js";
 
+// DOM Elements
 const seasonSelect = document.getElementById("seasonFilter");
-const weekSelect = document.getElementById("weekFilter");
 const typeSelect = document.getElementById("typeFilter");
+const weekSelect = document.getElementById("weekFilter");
+const teamSelect = document.getElementById("teamFilter");
 const scheduleContainer = document.getElementById("gamesContainer");
+const loader = document.getElementById("schedule-loader");
+
+// State
+let currentGames = [];
+
+document.addEventListener("DOMContentLoaded", () => {
+  populateTeamFilter();
+  loadSeasons();
+});
+
+// ---- INITIALIZE FILTERS ----
+function populateTeamFilter() {
+  // Sort teams alphabetically by city/name
+  const sortedTeams = Object.values(TEAM_INFO).sort((a, b) => 
+    a.city.localeCompare(b.city)
+  );
+
+  sortedTeams.forEach(team => {
+    const opt = document.createElement("option");
+    opt.value = team.teamId;
+    opt.textContent = `${team.city} ${team.name}`;
+    teamSelect.appendChild(opt);
+  });
+}
 
 // ---- LOAD SEASONS ----
 async function loadSeasons() {
-  const schedulesRef = ref(db, "config/schedules");
-  const snapshot = await get(schedulesRef);
+  try {
+    const schedulesRef = ref(db, "config/schedules");
+    const snapshot = await get(schedulesRef);
 
-  console.log("loadSeasons() snapshot:", snapshot.exists(), snapshot.val());
+    if (!snapshot.exists()) {
+      scheduleContainer.innerHTML = `<div class="empty-state">No schedule data found.</div>`;
+      loader.style.display = "none";
+      return;
+    }
 
-  if (!snapshot.exists()) {
-    scheduleContainer.innerHTML = `<p>No schedule data found (no seasons)</p>`;
-    return;
+    const seasons = Object.keys(snapshot.val()).sort((a, b) => b - a); // Sort newest first
+    
+    seasonSelect.innerHTML = "";
+    seasons.forEach((season) => {
+      const opt = document.createElement("option");
+      opt.value = season;
+      opt.textContent = `Season ${season}`;
+      seasonSelect.appendChild(opt);
+    });
+
+    seasonSelect.disabled = false;
+    
+    // Automatically load the weeks for the first season in the list
+    await loadWeeks(seasonSelect.value, typeSelect.value);
+
+  } catch (error) {
+    console.error("Error loading seasons:", error);
+    loader.textContent = "Error loading schedule data.";
   }
-
-  const seasons = Object.keys(snapshot.val());
-  console.log("Seasons found:", seasons);
-
-  seasonSelect.innerHTML = `<option value="">Select Season</option>`;
-  seasons.forEach((season) => {
-    const opt = document.createElement("option");
-    opt.value = season;
-    opt.textContent = `Season ${season}`;
-    seasonSelect.appendChild(opt);
-  });
 }
 
 // ---- LOAD WEEKS ----
 async function loadWeeks(seasonId, type) {
   if (!seasonId || !type) return;
 
-  const path = `config/schedules/${seasonId}/${type}`;
-  console.log("Loading weeks from:", path);
+  try {
+    const path = `config/schedules/${seasonId}/${type}`;
+    const snapshot = await get(ref(db, path));
 
-  const snapshot = await get(ref(db, path));
-  console.log("Weeks snapshot:", snapshot.exists(), snapshot.val());
+    weekSelect.innerHTML = "";
 
-  if (!snapshot.exists()) {
-    weekSelect.innerHTML = `<option value="">No Weeks Found</option>`;
-    return;
+    if (!snapshot.exists()) {
+      weekSelect.innerHTML = `<option value="">No Weeks</option>`;
+      weekSelect.disabled = true;
+      scheduleContainer.innerHTML = `<div class="empty-state">No games found for this season type.</div>`;
+      loader.style.display = "none";
+      return;
+    }
+
+    const weeks = Object.keys(snapshot.val()).sort((a, b) => a - b);
+    
+    weeks.forEach((week) => {
+      const opt = document.createElement("option");
+      opt.value = week;
+      opt.textContent = `Week ${week}`;
+      weekSelect.appendChild(opt);
+    });
+
+    weekSelect.disabled = false;
+
+    // Automatically load games for the first available week
+    if (weeks.length > 0) {
+      await loadGames(seasonId, type, weeks[0]);
+    }
+
+  } catch (error) {
+    console.error("Error loading weeks:", error);
   }
-
-  const weeks = Object.keys(snapshot.val());
-  weekSelect.innerHTML = `<option value="">Select Week</option>`;
-  weeks.forEach((week) => {
-    const opt = document.createElement("option");
-    opt.value = week;
-    opt.textContent = `Week ${week}`;
-    weekSelect.appendChild(opt);
-  });
 }
 
 // ---- LOAD GAMES ----
 async function loadGames(seasonId, type, week) {
   if (!seasonId || !type || !week) return;
 
-  const path = `config/schedules/${seasonId}/${type}/${week}`;
-  console.log("Loading games from:", path);
+  loader.style.display = "block";
+  scheduleContainer.style.display = "none";
 
-  const snapshot = await get(ref(db, path));
-  console.log("Games snapshot:", snapshot.exists(), snapshot.val());
+  try {
+    const path = `config/schedules/${seasonId}/${type}/${week}`;
+    const snapshot = await get(ref(db, path));
 
-  if (!snapshot.exists()) {
-    scheduleContainer.innerHTML = `<p>No games found for week ${week}.</p>`;
+    if (!snapshot.exists()) {
+      currentGames = [];
+    } else {
+      currentGames = Object.values(snapshot.val());
+    }
+
+    renderGames();
+
+  } catch (error) {
+    console.error("Error loading games:", error);
+    scheduleContainer.innerHTML = `<div class="empty-state">Error loading games.</div>`;
+  } finally {
+    loader.style.display = "none";
+    scheduleContainer.style.display = "grid";
+  }
+}
+
+// ---- RENDER GAMES ----
+function renderGames() {
+  scheduleContainer.innerHTML = "";
+
+  const selectedTeamId = teamSelect.value;
+
+  // Filter games if a specific team is selected
+  const filteredGames = currentGames.filter(game => {
+    if (!selectedTeamId) return true;
+    return String(game.homeTeamId) === selectedTeamId || String(game.awayTeamId) === selectedTeamId;
+  });
+
+  if (filteredGames.length === 0) {
+    scheduleContainer.innerHTML = `<div class="empty-state">No games match the selected filters.</div>`;
     return;
   }
 
-  const games = Object.values(snapshot.val());
-  scheduleContainer.innerHTML = "";
+  filteredGames.forEach((game) => {
+    const homeTeam = Object.values(TEAM_INFO).find(t => String(t.teamId) === String(game.homeTeamId));
+    const awayTeam = Object.values(TEAM_INFO).find(t => String(t.teamId) === String(game.awayTeamId));
 
-  games.forEach((game) => {
-    console.log("Game object:", game);
+    const homeLogo = homeTeam ? `images/logos/${homeTeam.logoId}.png` : "images/logos/default.png";
+    const awayLogo = awayTeam ? `images/logos/${awayTeam.logoId}.png` : "images/logos/default.png";
+    const homeAbbr = homeTeam?.abbr || "UNK";
+    const awayAbbr = awayTeam?.abbr || "UNK";
 
-    const homeTeam = TEAM_INFO[game.homeTeamId];
-    const awayTeam = TEAM_INFO[game.awayTeamId];
+    const awayScore = game.awayScore ?? "-";
+    const homeScore = game.homeScore ?? "-";
+    
+    // Determine visual winner for CSS
+    const awayClass = (game.awayScore > game.homeScore) ? "winner-score" : "";
+    const homeClass = (game.homeScore > game.awayScore) ? "winner-score" : "";
+    
+    let statusText = "Final";
+    if (game.awayScore === null || game.awayScore === "" || game.homeScore === null || game.homeScore === "") {
+        statusText = "TBD";
+    }
 
-    const homeLogo = homeTeam ? `images/logos/${homeTeam.logoId}.png` : "images/default.png";
-    const awayLogo = awayTeam ? `images/logos/${awayTeam.logoId}.png` : "images/default.png";
+    const gameCard = document.createElement("a");
+    gameCard.classList.add("game-card");
+    // Link to the specific game page if a scheduleId exists
+    gameCard.href = game.scheduleId ? `game.html?scheduleId=${game.scheduleId}` : "#";
 
-    const gameBox = document.createElement("div");
-    gameBox.classList.add("game-box");
-    gameBox.innerHTML = `
-      <div class="game-row">
-        <div class="team">
-          <img src="${awayLogo}" alt="${awayTeam?.abbrName || "Away"}" class="team-logo">
-          <span>${awayTeam?.abbrName || "???"}</span>
+    gameCard.innerHTML = `
+      <div class="game-team">
+        <img src="${awayLogo}" alt="${awayAbbr}">
+        <span class="game-team-name">${awayAbbr}</span>
+      </div>
+      
+      <div class="game-center">
+        <div class="game-score-row">
+          <span class="${awayClass}">${awayScore}</span>
+          <span class="game-vs">vs</span>
+          <span class="${homeClass}">${homeScore}</span>
         </div>
-        <div class="score">
-          <span>${game.awayScore ?? "-"}</span>
-          <span> @ </span>
-          <span>${game.homeScore ?? "-"}</span>
-        </div>
-        <div class="team">
-          <img src="${homeLogo}" alt="${homeTeam?.abbrName || "Home"}" class="team-logo">
-          <span>${homeTeam?.abbrName || "???"}</span>
-        </div>
+        <span class="game-status">${statusText}</span>
+      </div>
+
+      <div class="game-team">
+        <img src="${homeLogo}" alt="${homeAbbr}">
+        <span class="game-team-name">${homeAbbr}</span>
       </div>
     `;
-    scheduleContainer.appendChild(gameBox);
+    
+    scheduleContainer.appendChild(gameCard);
   });
 }
 
 // ---- EVENT LISTENERS ----
-seasonSelect.addEventListener("change", async () => {
-  const seasonId = seasonSelect.value;
-  const type = typeSelect.value;
-  weekSelect.innerHTML = "";
-  scheduleContainer.innerHTML = "";
-  if (seasonId && type) await loadWeeks(seasonId, type);
-});
+seasonSelect.addEventListener("change", () => loadWeeks(seasonSelect.value, typeSelect.value));
+typeSelect.addEventListener("change", () => loadWeeks(seasonSelect.value, typeSelect.value));
+weekSelect.addEventListener("change", () => loadGames(seasonSelect.value, typeSelect.value, weekSelect.value));
 
-typeSelect.addEventListener("change", async () => {
-  const seasonId = seasonSelect.value;
-  const type = typeSelect.value;
-  weekSelect.innerHTML = "";
-  scheduleContainer.innerHTML = "";
-  if (seasonId && type) await loadWeeks(seasonId, type);
-});
-
-weekSelect.addEventListener("change", async () => {
-  const seasonId = seasonSelect.value;
-  const type = typeSelect.value;
-  const week = weekSelect.value;
-  if (seasonId && type && week) await loadGames(seasonId, type, week);
-});
-
-// Initialize
-loadSeasons();
+// When team filter changes, we don't need to re-fetch DB, just re-render current data
+teamSelect.addEventListener("change", renderGames);
