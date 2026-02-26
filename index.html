@@ -17,7 +17,29 @@
       <img src="images/logos/NWFLlogo.png" alt="NWFL Logo" class="nwfl-logo" width="40" height="40" decoding="async" />
       <span class="league-title">Northwoods Football League</span>
     </div>
-    </nav>
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="hamburger">&#9776;</label>
+    <ul class="navbar-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="schedule.html">Schedule</a></li>
+      <li class="dropdown">
+        <a href="coaches.html">Teams</a>
+        <ul class="dropdown-content" id="teamDropdown"></ul>
+      </li>
+      <li><a href="stats.html">Stats</a></li>
+      <li><a href="trade.html">Trade Calc</a></li>
+      <li><a href="rules.html">Rules</a></li>
+      <li class="dropdown">
+        <a href="#">Watch</a>
+        <ul class="dropdown-content">
+          <li><a href="https://www.youtube.com/@northwoodsfootballleague" target="_blank">YouTube</a></li>
+          <li><a href="https://www.twitch.tv/northwoodsfootballleague" target="_blank">Twitch</a></li>
+        </ul>
+      </li>
+      <li class="admin-button"><a href="admin.html">Admin</a></li>
+      <li id="authSlot" class="auth-slot"></li>
+    </ul>
+  </nav>
 
   <div id="global-loader">Loading League Data...</div>
 
