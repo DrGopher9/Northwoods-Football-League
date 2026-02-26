@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // ---- INITIALIZE FILTERS ----
 function populateTeamFilter() {
-  // Sort teams alphabetically by city/name
   const sortedTeams = Object.values(TEAM_INFO).sort((a, b) => 
     a.city.localeCompare(b.city)
   );
@@ -45,7 +44,7 @@ async function loadSeasons() {
       return;
     }
 
-    const seasons = Object.keys(snapshot.val()).sort((a, b) => b - a); // Sort newest first
+    const seasons = Object.keys(snapshot.val()).sort((a, b) => b - a); 
     
     seasonSelect.innerHTML = "";
     seasons.forEach((season) => {
@@ -56,8 +55,6 @@ async function loadSeasons() {
     });
 
     seasonSelect.disabled = false;
-    
-    // Automatically load the weeks for the first season in the list
     await loadWeeks(seasonSelect.value, typeSelect.value);
 
   } catch (error) {
@@ -84,25 +81,27 @@ async function loadWeeks(seasonId, type) {
       return;
     }
 
-    // Sort numerically rather than alphabetically to ensure Week 10 comes after Week 9
     const weeks = Object.keys(snapshot.val()).sort((a, b) => Number(a) - Number(b));
     
-    // ---> Inject "All Weeks" Option <---
     const allOpt = document.createElement("option");
     allOpt.value = "all";
     allOpt.textContent = "All Weeks";
     weekSelect.appendChild(allOpt);
 
+    const seenLabels = new Set(); // Prevent duplicate dropdown options
+
     weeks.forEach((week) => {
+      let label = `Week ${week}`;
+      if (seenLabels.has(label)) return;
+      seenLabels.add(label);
+
       const opt = document.createElement("option");
       opt.value = week;
-      opt.textContent = `Week ${week}`;
+      opt.textContent = label;
       weekSelect.appendChild(opt);
     });
 
     weekSelect.disabled = false;
-
-    // Default to "All Weeks" on initial load
     weekSelect.value = "all";
     await loadGames(seasonId, type, "all");
 
@@ -122,23 +121,19 @@ async function loadGames(seasonId, type, week) {
     currentGames = [];
 
     if (week === "all") {
-      // Fetch the entire season type (all weeks)
       const path = `config/schedules/${seasonId}/${type}`;
       const snapshot = await get(ref(db, path));
       
       if (snapshot.exists()) {
         const allWeeksData = snapshot.val();
-        // Flatten the data into one array, tagging each game with its week number
         Object.entries(allWeeksData).forEach(([weekNum, gamesObj]) => {
           Object.values(gamesObj).forEach(game => {
             currentGames.push({ ...game, displayWeek: Number(weekNum) });
           });
         });
-        // Sort chronologically by week
         currentGames.sort((a, b) => a.displayWeek - b.displayWeek);
       }
     } else {
-      // Fetch just the specific week
       const path = `config/schedules/${seasonId}/${type}/${week}`;
       const snapshot = await get(ref(db, path));
       
@@ -163,11 +158,23 @@ async function loadGames(seasonId, type, week) {
 // ---- RENDER GAMES ----
 function renderGames() {
   scheduleContainer.innerHTML = "";
-
   const selectedTeamId = teamSelect.value;
 
+  // Aggressive Deduplication filter
+  const uniqueGames = [];
+  const seen = new Set();
+  
+  currentGames.forEach(game => {
+    if (!game || !game.homeTeamId || !game.awayTeamId) return;
+    const key = `${game.homeTeamId}-${game.awayTeamId}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      uniqueGames.push(game);
+    }
+  });
+
   // Filter games if a specific team is selected
-  const filteredGames = currentGames.filter(game => {
+  const filteredGames = uniqueGames.filter(game => {
     if (!selectedTeamId) return true;
     return String(game.homeTeamId) === selectedTeamId || String(game.awayTeamId) === selectedTeamId;
   });
@@ -189,7 +196,6 @@ function renderGames() {
     const awayScore = game.awayScore ?? "-";
     const homeScore = game.homeScore ?? "-";
     
-    // Determine visual winner for CSS
     const awayClass = (game.awayScore > game.homeScore) ? "winner-score" : "";
     const homeClass = (game.homeScore > game.awayScore) ? "winner-score" : "";
     
@@ -232,6 +238,4 @@ function renderGames() {
 seasonSelect.addEventListener("change", () => loadWeeks(seasonSelect.value, typeSelect.value));
 typeSelect.addEventListener("change", () => loadWeeks(seasonSelect.value, typeSelect.value));
 weekSelect.addEventListener("change", () => loadGames(seasonSelect.value, typeSelect.value, weekSelect.value));
-
-// When team filter changes, we don't need to re-fetch DB, just re-render current data
 teamSelect.addEventListener("change", renderGames);
