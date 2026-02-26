@@ -64,7 +64,6 @@ function setupTabs(teamId) {
         if (content.id === `tab-${tab}`) content.classList.add("active");
       });
 
-      // Lazy load heavy tabs only when clicked
       if (tab === "statistics" && !statsLoaded) {
         loadAggregatedStats(teamId);
         statsLoaded = true;
@@ -89,13 +88,11 @@ async function loadTeamData(teamId) {
   const meta = data.meta || {};
   const standings = data.standings || {};
 
-  // Color Magic
   if (meta.primaryColor) {
     const color = decimalToHexColor(meta.primaryColor);
     document.documentElement.style.setProperty('--team-accent', color);
   } 
 
-  // Header Info
   document.getElementById("teamLogo").src = `images/logos/${meta.logoId}.png`;
   document.getElementById("teamName").textContent = `${meta.cityName || ""} ${meta.displayName || ""}`;
   document.getElementById("teamDivision").textContent = meta.divName || "";
@@ -106,14 +103,12 @@ async function loadTeamData(teamId) {
   const record = `${standings.totalWins || 0}-${standings.totalLosses || 0}${standings.totalTies ? `-${standings.totalTies}` : ""}`;
   document.getElementById("teamRecord").textContent = record;
 
-  // Cap Info
   document.getElementById("capRoom").textContent = `$${formatMillions(standings.capRoom || 0)}`;
   document.getElementById("capSpent").textContent = `$${formatMillions(standings.capSpent || 0)}`;
   
   const capAvail = standings.capAvailable || 0;
   document.getElementById("capAvailable").textContent = capAvail >= 1000000 ? `$${formatMillions(capAvail)}` : `$${formatThousands(capAvail)}`;
 
-  // Offense / Defense Ranks
   const mapStat = (id, val, rankId, rankVal) => {
     document.getElementById(id).textContent = val ?? "--";
     document.getElementById(rankId).textContent = rankVal ? `(${rankVal})` : "";
@@ -129,7 +124,6 @@ async function loadTeamData(teamId) {
   mapStat("defTotalYds", standings.defTotalYds, "defTotalYdsRank", standings.defTotalYdsRank);
   mapStat("ptsAgainst", standings.ptsAgainst, "ptsAgainstRank", standings.ptsAgainstRank);
 
-  // Trigger Sub-loads
   loadUpcomingGames(teamId, standings.weekIndex ?? 0);
   loadSchedule(teamId);
 }
@@ -141,6 +135,8 @@ async function loadUpcomingGames(teamId, currentWeekIndex) {
   const container = document.getElementById("upcomingGames");
   container.innerHTML = "";
 
+  const seenGames = new Set(); // Prevent duplicates
+
   for (const weekIndex of weeksToShow) {
     const snap = await get(ref(db, `${LEAGUE_PATH}/schedules/reg/${weekIndex}`));
     if (!snap.exists()) continue;
@@ -148,7 +144,12 @@ async function loadUpcomingGames(teamId, currentWeekIndex) {
     const games = snap.val();
     for (const gameId in games) {
       const game = games[gameId];
-      if (String(game.homeTeamId) !== teamId && String(game.awayTeamId) !== teamId) continue;
+      if (!game || (String(game.homeTeamId) !== teamId && String(game.awayTeamId) !== teamId)) continue;
+
+      // Duplicate Check
+      const uniqueKey = `${weekIndex}-${game.homeTeamId}-${game.awayTeamId}`;
+      if (seenGames.has(uniqueKey)) continue;
+      seenGames.add(uniqueKey);
 
       const isHome = String(game.homeTeamId) === teamId;
       const oppId = isHome ? game.awayTeamId : game.homeTeamId;
@@ -164,10 +165,13 @@ async function loadUpcomingGames(teamId, currentWeekIndex) {
         result = teamScore > oppScore ? "W" : teamScore < oppScore ? "L" : "T";
       }
 
+      // Safe week formatting (handle 0-index if needed)
+      let safeWeek = isNaN(Number(weekIndex)) ? weekIndex : (Number(weekIndex) === 0 ? 1 : weekIndex);
+
       const row = document.createElement("div");
       row.className = "game-row";
       row.innerHTML = `
-        <span style="font-weight: bold; width: 60px;">Wk ${(game.weekIndex ?? weekIndex)}</span>
+        <span style="font-weight: bold; width: 60px;">Wk ${safeWeek}</span>
         <span style="color: var(--text-muted);">${isHome ? "vs" : "@"}</span>
         <img src="images/logos/${opp.logoId}.png" class="opponent-logo" alt="logo">
         <a href="teams.html?teamId=${oppId}" class="opponent-link">${opp.abbrName}</a>
@@ -193,14 +197,19 @@ async function loadSchedule(teamId) {
 
     list.innerHTML = "";
     const weeks = snap.val();
-
-    // Fix: Ensure weeks are iterated in numeric order (Week 1, Week 2, etc.)
     const sortedWeeks = Object.keys(weeks).sort((a, b) => Number(a) - Number(b));
+    
+    const seenGames = new Set(); // Deduplication
 
     for (const weekIdx of sortedWeeks) {
       for (const gameId in weeks[weekIdx]) {
         const game = weeks[weekIdx][gameId];
-        if (String(game.homeTeamId) !== teamId && String(game.awayTeamId) !== teamId) continue;
+        if (!game || (String(game.homeTeamId) !== teamId && String(game.awayTeamId) !== teamId)) continue;
+
+        // Ensure we only render one instance of a matchup per week
+        const uniqueKey = `${weekIdx}-${game.homeTeamId}-${game.awayTeamId}`;
+        if (seenGames.has(uniqueKey)) continue;
+        seenGames.add(uniqueKey);
 
         const isHome = String(game.homeTeamId) === teamId;
         const oppId = isHome ? game.awayTeamId : game.homeTeamId;
@@ -212,16 +221,21 @@ async function loadSchedule(teamId) {
         const oppScore = isHome ? game.awayScore : game.homeScore;
         const result = teamScore != null && oppScore != null ? (teamScore > oppScore ? "W" : teamScore < oppScore ? "L" : "T") : "TBD";
 
+        let safeWeek = isNaN(Number(weekIdx)) ? weekIdx : (Number(weekIdx) === 0 ? 1 : weekIdx);
+
         const item = document.createElement("div");
         item.className = "schedule-item";
         item.innerHTML = `
-          <div>Week ${weekIdx}</div>
-          <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <span style="color: var(--text-muted); font-size: 0.85rem;">${isHome ? "vs" : "@"}</span>
-            <img src="images/logos/${opp.logoId}.png" class="opponent-logo" alt="logo">
-            <a href="teams.html?teamId=${oppId}" class="opponent-link" style="margin: 0;">${opp.abbrName}</a>
+          <div style="font-weight: bold; color: var(--text-muted);">Week ${safeWeek}</div>
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span style="color: var(--text-muted); font-size: 0.9rem; width: 1.5rem; text-align: right;">${isHome ? "vs" : "@"}</span>
+            <img src="images/logos/${opp.logoId}.png" class="opponent-logo" alt="logo" style="width: 28px; height: 28px; object-fit: contain;">
+            <a href="teams.html?teamId=${oppId}" class="opponent-link" style="margin: 0; font-size: 1.1rem;">${opp.abbrName}</a>
           </div>
-          <a href="game.html?scheduleId=${game.scheduleId ?? gameId}" class="game-score">${teamScore ?? '-'}-${oppScore ?? '-'} <span style="font-size: 0.85rem; color: var(--text-main);">${result}</span></a>
+          <a href="game.html?scheduleId=${game.scheduleId ?? gameId}" class="game-score" style="font-size: 1.15rem; justify-self: end; color: var(--accent-blue);">
+            ${teamScore ?? '-'}-${oppScore ?? '-'} 
+            <span style="font-size: 0.9rem; color: var(--text-main); margin-left: 0.4rem;" class="${result === 'W' ? 'highlight' : ''}">${result}</span>
+          </a>
         `;
         list.appendChild(item);
       }
@@ -232,7 +246,7 @@ async function loadSchedule(teamId) {
   renderSched();
 }
 
-// ----- DEPTH CHART (NEW) -----
+// ----- DEPTH CHART -----
 async function loadDepthChart(teamId) {
   const offContainer = document.querySelector("#depth-offense .depth-list");
   const defContainer = document.querySelector("#depth-defense .depth-list");
@@ -250,7 +264,6 @@ async function loadDepthChart(teamId) {
 
     const roster = Object.values(snap.val());
     
-    // Ordered position groups
     const positions = {
       offense: ['QB', 'HB', 'FB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT'],
       defense: ['LE', 'RE', 'DT', 'LOLB', 'MLB', 'ROLB', 'CB', 'FS', 'SS', 'K', 'P']
@@ -263,7 +276,6 @@ async function loadDepthChart(teamId) {
       grouped[pos].push(p);
     });
 
-    // Sort each group by Overall Rating (OVR) descending
     Object.keys(grouped).forEach(pos => {
       grouped[pos].sort((a, b) => (b.playerBestOvr || 0) - (a.playerBestOvr || 0));
     });
@@ -273,13 +285,9 @@ async function loadDepthChart(teamId) {
       posArray.forEach(pos => {
         if (!grouped[pos] || grouped[pos].length === 0) return;
         
-        let html = `<div class="depth-position-group">
-                      <div class="depth-position-title">${pos}</div>`;
-        
-        // Take top 4 players per position for the chart
+        let html = `<div class="depth-position-group"><div class="depth-position-title">${pos}</div>`;
         grouped[pos].slice(0, 4).forEach((player, idx) => {
            const name = player.fullName || `${player.firstName} ${player.lastName}`;
-           // Link to individual player page if you eventually create one!
            html += `<div class="depth-player-row">
                       <span class="depth-rank">${idx + 1}</span>
                       <a href="#" class="depth-name">${name}</a>
