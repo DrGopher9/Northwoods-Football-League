@@ -165,13 +165,34 @@
       </div>
     </section>
 
-    <section id="tab-depth" class="tab-content">
-      <div class="info-box glass-card" style="text-align: center; padding: 4rem;">
-        <h2 style="border: none;">Depth Chart</h2>
-        <p class="muted">(Depth chart section coming soon...)</p>
+<section id="tab-depth" class="tab-content">
+      <div class="depth-chart-container">
+        <div class="depth-column" id="depth-offense">
+          <h3 class="depth-header">Offense</h3>
+          <div class="depth-list">
+            <p class="muted">Loading offense...</p>
+          </div>
+        </div>
+        
+        <div class="depth-column" id="depth-defense">
+          <h3 class="depth-header">Defense & Special Teams</h3>
+          <div class="depth-list">
+            <p class="muted">Loading defense...</p>
+          </div>
+        </div>
       </div>
     </section>
   </main>
+
+  <footer class="site-footer">
+    <p>Copyright © Northwoodsfblg.com, 2025.</p>
+  </footer>
+
+  <script type="module" src="scripts/authWidget.js"></script>
+  <script type="module" src="scripts/navbar.js"></script>
+  <script type="module" src="scripts/teams.js?v=4"></script>
+</body>
+</html>
 
   <footer class="site-footer">
     <p>Copyright © Northwoodsfblg.com, 2025.</p>
