@@ -50,6 +50,7 @@ function setupTabs(teamId) {
   const tabContents = document.querySelectorAll(".tab-content");
 
   let statsLoaded = false;
+  let depthLoaded = false;
 
   tabButtons.forEach(button => {
     button.addEventListener("click", () => {
@@ -63,10 +64,14 @@ function setupTabs(teamId) {
         if (content.id === `tab-${tab}`) content.classList.add("active");
       });
 
-      // Lazy load the heavy stats table only when the user clicks the tab
+      // Lazy load heavy tabs only when clicked
       if (tab === "statistics" && !statsLoaded) {
         loadAggregatedStats(teamId);
         statsLoaded = true;
+      }
+      if (tab === "depth" && !depthLoaded) {
+        loadDepthChart(teamId);
+        depthLoaded = true;
       }
     });
   });
@@ -162,7 +167,7 @@ async function loadUpcomingGames(teamId, currentWeekIndex) {
       const row = document.createElement("div");
       row.className = "game-row";
       row.innerHTML = `
-        <span style="font-weight: bold; width: 60px;">Wk ${(game.weekIndex ?? weekIndex) + 1}</span>
+        <span style="font-weight: bold; width: 60px;">Wk ${(game.weekIndex ?? weekIndex)}</span>
         <span style="color: var(--text-muted);">${isHome ? "vs" : "@"}</span>
         <img src="images/logos/${opp.logoId}.png" class="opponent-logo" alt="logo">
         <a href="teams.html?teamId=${oppId}" class="opponent-link">${opp.abbrName}</a>
@@ -189,7 +194,10 @@ async function loadSchedule(teamId) {
     list.innerHTML = "";
     const weeks = snap.val();
 
-    for (const weekIdx in weeks) {
+    // Fix: Ensure weeks are iterated in numeric order (Week 1, Week 2, etc.)
+    const sortedWeeks = Object.keys(weeks).sort((a, b) => Number(a) - Number(b));
+
+    for (const weekIdx of sortedWeeks) {
       for (const gameId in weeks[weekIdx]) {
         const game = weeks[weekIdx][gameId];
         if (String(game.homeTeamId) !== teamId && String(game.awayTeamId) !== teamId) continue;
@@ -222,6 +230,75 @@ async function loadSchedule(teamId) {
 
   filter.addEventListener("change", renderSched);
   renderSched();
+}
+
+// ----- DEPTH CHART (NEW) -----
+async function loadDepthChart(teamId) {
+  const offContainer = document.querySelector("#depth-offense .depth-list");
+  const defContainer = document.querySelector("#depth-defense .depth-list");
+
+  offContainer.innerHTML = "<p class='muted'>Loading roster...</p>";
+  defContainer.innerHTML = "<p class='muted'>Loading roster...</p>";
+
+  try {
+    const snap = await get(ref(db, `${LEAGUE_PATH}/teams/${teamId}/roster`));
+    if (!snap.exists()) {
+      offContainer.innerHTML = "<p class='muted'>No roster data found.</p>";
+      defContainer.innerHTML = "";
+      return;
+    }
+
+    const roster = Object.values(snap.val());
+    
+    // Ordered position groups
+    const positions = {
+      offense: ['QB', 'HB', 'FB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT'],
+      defense: ['LE', 'RE', 'DT', 'LOLB', 'MLB', 'ROLB', 'CB', 'FS', 'SS', 'K', 'P']
+    };
+
+    const grouped = {};
+    roster.forEach(p => {
+      const pos = p.position;
+      if (!grouped[pos]) grouped[pos] = [];
+      grouped[pos].push(p);
+    });
+
+    // Sort each group by Overall Rating (OVR) descending
+    Object.keys(grouped).forEach(pos => {
+      grouped[pos].sort((a, b) => (b.playerBestOvr || 0) - (a.playerBestOvr || 0));
+    });
+
+    const renderGroup = (posArray, container) => {
+      container.innerHTML = "";
+      posArray.forEach(pos => {
+        if (!grouped[pos] || grouped[pos].length === 0) return;
+        
+        let html = `<div class="depth-position-group">
+                      <div class="depth-position-title">${pos}</div>`;
+        
+        // Take top 4 players per position for the chart
+        grouped[pos].slice(0, 4).forEach((player, idx) => {
+           const name = player.fullName || `${player.firstName} ${player.lastName}`;
+           // Link to individual player page if you eventually create one!
+           html += `<div class="depth-player-row">
+                      <span class="depth-rank">${idx + 1}</span>
+                      <a href="#" class="depth-name">${name}</a>
+                      <span class="depth-ovr">${player.playerBestOvr || '--'}</span>
+                    </div>`;
+        });
+        html += `</div>`;
+        container.insertAdjacentHTML("beforeend", html);
+      });
+    };
+
+    renderGroup(positions.offense, offContainer);
+    renderGroup(positions.defense, defContainer);
+
+  } catch(e) {
+    console.error("Depth chart error:", e);
+    offContainer.innerHTML = "<p class='muted'>Error loading depth chart.</p>";
+    defContainer.innerHTML = "";
+  }
 }
 
 // ----- HEAVY STATS AGGREGATION -----
@@ -312,7 +389,7 @@ function renderStatsTable(players, tableId, columns) {
     html += `<tr>`;
     columns.forEach(c => {
       if (c === "name") {
-        html += `<td><a href="player.html?rosterId=${p.playerId}" class="player-link">${p.name}</a></td>`;
+        html += `<td><a href="#" class="player-link">${p.name}</a></td>`;
       } else {
         let val = p[c] ?? "--";
         if (typeof val === "number") val = Number.isInteger(val) ? val : val.toFixed(1);
