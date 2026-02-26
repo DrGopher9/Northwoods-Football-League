@@ -86,6 +86,12 @@ async function loadWeeks(seasonId, type) {
 
     const weeks = Object.keys(snapshot.val()).sort((a, b) => a - b);
     
+    // ---> Inject "All Weeks" Option <---
+    const allOpt = document.createElement("option");
+    allOpt.value = "all";
+    allOpt.textContent = "All Weeks";
+    weekSelect.appendChild(allOpt);
+
     weeks.forEach((week) => {
       const opt = document.createElement("option");
       opt.value = week;
@@ -95,9 +101,10 @@ async function loadWeeks(seasonId, type) {
 
     weekSelect.disabled = false;
 
-    // Automatically load games for the first available week
+    // Automatically load games for the first available week (which will be index 1 since "All" is 0)
     if (weeks.length > 0) {
-      await loadGames(seasonId, type, weeks[0]);
+      weekSelect.value = weeks[0]; 
+      await loadGames(seasonId, type, weekSelect.value);
     }
 
   } catch (error) {
@@ -113,13 +120,34 @@ async function loadGames(seasonId, type, week) {
   scheduleContainer.style.display = "none";
 
   try {
-    const path = `config/schedules/${seasonId}/${type}/${week}`;
-    const snapshot = await get(ref(db, path));
+    currentGames = [];
 
-    if (!snapshot.exists()) {
-      currentGames = [];
+    if (week === "all") {
+      // Fetch the entire season type (all weeks)
+      const path = `config/schedules/${seasonId}/${type}`;
+      const snapshot = await get(ref(db, path));
+      
+      if (snapshot.exists()) {
+        const allWeeksData = snapshot.val();
+        // Flatten the data into one array, tagging each game with its week number
+        Object.entries(allWeeksData).forEach(([weekNum, gamesObj]) => {
+          Object.values(gamesObj).forEach(game => {
+            currentGames.push({ ...game, displayWeek: Number(weekNum) });
+          });
+        });
+        // Sort chronologically by week
+        currentGames.sort((a, b) => a.displayWeek - b.displayWeek);
+      }
     } else {
-      currentGames = Object.values(snapshot.val());
+      // Fetch just the specific week
+      const path = `config/schedules/${seasonId}/${type}/${week}`;
+      const snapshot = await get(ref(db, path));
+      
+      if (snapshot.exists()) {
+        Object.values(snapshot.val()).forEach(game => {
+          currentGames.push({ ...game, displayWeek: Number(week) });
+        });
+      }
     }
 
     renderGames();
@@ -183,6 +211,7 @@ function renderGames() {
       </div>
       
       <div class="game-center">
+        <span style="font-size: 0.85rem; color: var(--accent-blue); font-weight: bold; text-transform: uppercase; margin-bottom: 0.3rem;">Week ${game.displayWeek}</span>
         <div class="game-score-row">
           <span class="${awayClass}">${awayScore}</span>
           <span class="game-vs">vs</span>
