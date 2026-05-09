@@ -1,0 +1,525 @@
+#teamOverall {
+  color: var(--team-primary);
+  font-weight: bold;
+}
+
+/* Reset & Global Dark Theme */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #121212;
+  color: #e0e0e0;
+  line-height: 1.5;
+}
+
+/* Header */
+header {
+  background: #1f1f1f;
+  color: #ffffff;
+  padding: 1.5rem;
+  text-align: center;
+  border-bottom: 2px solid #333;
+}
+
+/* Score Carousel Layout */
+.score-carousel {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  padding: 0 1rem;
+}
+
+/* Score Card Box */
+.score-card {
+  background-color: #1e1e1e;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  min-width: 180px; /* smaller box */
+  max-width: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.score-card:hover {
+  transform: scale(1.03);
+}
+
+/* Score Row (each team line) */
+.score-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0.25rem 0;
+}
+
+/* Logo + abbreviation + score */
+.score-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.score-team {
+  font-weight: 600;
+  flex-grow: 1;
+  margin-left: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.score-value {
+  background-color: #2c2c2c;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.score-winner {
+  background-color: #2ecc71;
+  color: #fff;
+}
+
+/* Grid Layout */
+main.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.column,
+.center {
+  background: #1e1e1e;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid #333;
+}
+
+/* Section Headings */
+h2 {
+  border-bottom: 2px solid #333;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+/* Unstyled Lists */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  padding: 0.25rem 0;
+}
+
+/* Game of the Week */
+.game-of-the-week {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.game-of-the-week h2 {
+  font-size: 1.4rem;
+  color: #90caf9;
+  margin-bottom: 1rem;
+}
+
+.gotw-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #222;
+  padding: 1.5rem;
+  border-radius: 10px;
+  gap: 1.5rem;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+.team {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.right-team {
+  flex-direction: row-reverse;
+}
+
+.gotw-team-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+
+.right-align {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.left-align {
+  text-align: left;
+  align-items: flex-start;
+}
+
+.team-logo {
+  height: 80px;
+  width: 80px;
+  object-fit: contain;
+}
+
+.gotw-team-name {
+  font-weight: bold;
+  color: #90caf9;
+  font-size: 1.4rem;
+}
+
+.team-user {
+  font-size: 0.95rem;
+  color: #aaa;
+}
+
+.gotw-score-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.gotw-score-box a {
+  color: #e0e0e0;
+  text-decoration: none;
+}
+
+.gotw-score-box a:hover {
+  color: #90caf9;
+}
+
+.gotw-score-box .vs {
+  color: #888;
+  font-size: 1.3rem;
+  margin: 0.5rem 0;
+}
+
+/* Players of the Week */
+.players-of-week h2 {
+  text-align: center;
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  color: #90caf9;
+}
+
+.potw-grid-2x2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.potw-card {
+  background-color: #2a2a2a;
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid #444;
+  text-align: center;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.potw-card:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+}
+
+.potw-card h3 {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+  color: #90caf9;
+}
+
+.potw-card p {
+  margin: 0.25rem 0;
+  color: #ddd;
+}
+
+.potw-logo {
+  height: 40px;
+  margin-bottom: 0.5rem;
+}
+
+/* Card Title */
+.potw-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  color: #90caf9;
+}
+
+/* Card Text */
+.potw-card p {
+  margin: 0;
+  color: #ddd;
+}
+
+/* Playoff Picture Cards */
+.playoff-team {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+  background-color: transparent;
+}
+
+.playoff-team img.team-logo {
+  height: 22px;
+  width: 22px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.playoff-team .seed {
+  width: 1.5rem;
+  text-align: center;
+  font-weight: bold;
+  color: #90caf9;
+}
+
+.playoff-team.division-winner {
+  background-color: rgba(200, 200, 200, 0.1);
+  border-left: 3px solid #ccc;
+}
+
+/* In the Hunt Section */
+.hunt-section h3 {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  color: #ccc;
+  border-top: 1px solid #444;
+  padding-top: 0.5rem;
+}
+
+.playoff-conference {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #333;
+}
+
+.playoff-conference h2 {
+  font-size: 1.3rem;
+  color: #90caf9;
+  margin-bottom: 0.5rem;
+}
+
+.hunt-section {
+  margin-top: 0.75rem;
+}
+
+.hunt-section h3 {
+  color: #b0bec5;
+  font-weight: normal;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
+
+
+
+/* Game Summary Pages */
+
+.team-stats-box {
+  background-color: #1e1e1e;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  color: #e0e0e0;
+}
+
+.team-stats-container {
+  display: flex;
+  gap: 2rem;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.team-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 180px;
+}
+
+.team-box.right {
+  flex-direction: column-reverse;
+}
+
+.team-logo-large {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  margin-bottom: 0.5rem;
+}
+
+.game-recap-team-info {
+  text-align: left;
+}
+
+.game-recap-team-info.align-right {
+  text-align: right;
+}
+
+.game-recap-score-center {
+  text-align: center;
+}
+
+.game-recap-score-value {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.vs-text {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+  color: #cccccc;
+}
+
+.recap-team-side {
+  flex: 0 0 auto;
+}
+
+.recap-logo {
+  width: 70px;
+  height: 70px;
+}
+
+.recap-team-info {
+  text-align: left;
+  color: #fff;
+  min-width: 140px;
+}
+
+.recap-team-info.right-align {
+  text-align: right;
+}
+
+.recap-city {
+  font-size: 14px;
+  color: #ccc;
+  margin-bottom: 2px;
+}
+
+.recap-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #61aaff;
+  margin-bottom: 4px;
+}
+
+.recap-user,
+.recap-record {
+  font-size: 13px;
+  color: #aaa;
+  margin: 2px 0;
+}
+
+.recap-score-box {
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+.recap-score-line {
+  font-size: 28px;
+  font-weight: bold;
+  color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.recap-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.tab-button {
+  background-color: #2a2a2a;
+  color: #ccc;
+  border: 1px solid #444;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.tab-button.active {
+  background-color: #444;
+  color: #fff;
+}
+
+.tab-content {
+  display: none;
+  margin-top: 1rem;
+}
+
+.tab-content.active {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.team-stats-entry {
+  background-color: #1e1e1e;
+  padding: 1rem;
+  border-radius: 8px;
+  flex: 1 1 400px;
+  max-width: 500px;
+}
+
+.team-stats-entry h3 {
+  margin-top: 0;
+}
+
+#scheduleList .game-row {
+  padding: 6px;
+  border-bottom: 1px solid #444;
+}
+
+/* Consolidated global styles */
+body {
+  background-color: #121212;
+  color: #e0e0e0;
+  font-family: 'Roboto Condensed', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+nav {
+  display: flex;
+  justify-content: center;
+  background-color: #181818;
+  padding: 0.5rem;
+  gap: 2rem;
+}
+nav a {
+  color: #e0e0e0;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+a:hover {
+  color: #90caf9;
+}

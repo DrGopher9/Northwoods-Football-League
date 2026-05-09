@@ -1,0 +1,415 @@
+.team-header { 
+  display: flex;
+  align-items: center;
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 3px solid var(--team-accent);
+  background-color: var(--team-accent);
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+  gap: 2rem; /* Adds spacing between logo and text */
+}
+.team-header-inner {
+  display: flex;
+  align-items: center;
+}
+
+.team-tabs {
+  max-width: 1000px;
+  margin: 0 auto 1rem auto;
+  padding: 0 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.team-logo-container img {
+  width: 150px;
+  height: auto;
+}
+
+.team-meta {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 2rem;
+  padding: 1rem;
+}
+.team-meta h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.team-meta p {
+  margin: 0.2rem 0;
+  font-size: 1rem;
+  color: #e0e0e0;
+}
+
+.team-meta p strong {
+  color: white;
+}
+
+.team-stats-er {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.team-stats-section {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  padding: 1rem;
+  border-top: 5px solid var(--team-accent, #444);
+}
+
+.team-stats-section h3 {
+  color: #ffffff;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #444;
+  padding-bottom: 0.3rem;
+}
+
+.stats-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  color: #e0e0e0;
+  font-size: 1rem;
+}
+
+.stats-row div {
+  flex: 1 1 40%;
+  min-width: 120px;
+}
+
+.stat-card {
+  background-color: #1e1e1e;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+  flex: 1 1 200px;
+  font-size: 1rem;
+}
+.team-hero {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 2rem;
+  color: #fff;
+  border-radius: 0 0 12px 12px;
+}
+.team-hero-left {
+  margin-right: 2rem;
+}
+.team-hero-right h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+.team-hero-right h2 {
+  margin: 0 0 1rem;
+  font-size: 1.5rem;
+  font-weight: normal;
+}
+.team-logo-large {
+  width: 100px;
+  height: 100px;
+}
+:root {
+  
+  --team-accent: #1e90ff; /* fallback */
+}
+
+.tab-button.active {
+  background-color: var(--team-accent);
+  color: #fff;
+  border-color: var(--team-accent);
+}
+
+.playoff-box h2 {
+  border-left: 4px solid var(--team-accent);
+  padding-left: 0.5rem;
+}
+.tab-button:hover {
+  background-color: rgba(30, 144, 255, 0.1);
+  border-color: var(--team-accent);
+}
+
+.team-info, .team-details {
+  border: 2px solid var(--team-primary);
+  background-color: #1a1a1a;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.game-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  font-size: 1rem;
+}
+
+.game-row span {
+  color: #ffffff; /* Week and VS/@ in white */
+  font-weight: 600;
+}
+
+.game-row .opponent-logo {
+  width: 20px;
+  height: auto;
+  vertical-align: middle;
+}
+
+.game-row a {
+  font-weight: 600;
+  text-decoration: none;
+  color: #00bfff; /* consistent light blue */
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr; /* left column vs wider right column */
+  gap: 1rem;
+}
+
+#salaryCapBox,
+#upcomingGamesBox {
+  width: 100%;
+}
+
+#teamStatsBox {
+  grid-column: 2; /* make it take the full right side */
+  width: 100%;
+  height: 100%;
+  min-height: 300px; /* ensures it's taller, adjust as needed */
+  display: flex;
+  flex-direction: column;
+}
+
+.game-row a:hover {
+  text-decoration: underline;
+}
+
+.home-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
+  max-width: 1500px; /* limit overall width for balance */
+  margin: 1rem auto;  /* center the grid */
+}
+
+.left-column {
+  flex: 0 0 30%;  /* take 35% of max grid width */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 250px;
+}
+
+.right-column {
+  flex: 0 0 65%;  /* take 60% of max grid width */
+  min-width: 300px;
+}
+
+.schedule-filters-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.schedule-filters label {
+  font-size: 1rem;
+  color: #e0e0e0;
+}
+
+.schedule-container {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  border: 2px solid var(--team-accent, #00f);
+  padding: 1rem;
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
+.schedule-table {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.schedule-header,
+.schedule-item {
+  display: grid;
+  grid-template-columns: 1fr 3fr 2fr;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+}
+
+.schedule-header {
+  border-bottom: 2px solid var(--team-accent, #00f);
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.schedule-item {
+  background-color: #1e1e1e;
+  border-radius: 6px;
+  margin-bottom: 0.4rem;
+  color: #e0e0e0;
+}
+
+.schedule-item a {
+  color: #66ccff; /* your standard light blue */
+  text-decoration: none;
+}
+
+.schedule-item img.opponent-logo {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 0.3rem;
+}
+
+a.opponent-link, .score-link {
+  color: #66ccff; /* your standard light blue */
+  text-decoration: none;
+}
+
+a.opponent-link:hover, .score-link:hover {
+  text-decoration: underline;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.player-stats-table {
+  max-width: 1500px;
+  margin: 1rem auto; /* center it nicely */
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.player-stats-table th, .player-stats-table td {
+  border: 1px solid #333;
+  padding: 0.75rem;
+  text-align: center;
+  color: #e0e0e0;
+}
+
+.player-stats-table th {
+  background-color: var(--team-accent, #0055aa);
+  color: white;
+  font-weight: 700;
+}
+
+.player-stats-table tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.05); /* subtle grey highlight */
+}
+
+.stats-section-title {
+  font-size: 1.5rem;
+  color: #ffffff;
+  border-left: 4px solid var(--team-accent);
+  padding-left: 0.5rem;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.player-link {
+  color: #66ccff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.player-link:hover {
+  text-decoration: underline;
+}
+
+.stats-container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.stats-container h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.stats-section {
+  margin-bottom: 3rem;
+}
+
+.stats-section h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--team-accent);
+  padding-bottom: 0.5rem;
+  color: #e0e0e0;
+}
+
+.player-stats-table th {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.player-stats-table th:hover {
+  color: #999999; /* medium grey */
+}
+
+@media (max-width: 768px) {
+  .home-grid {
+    flex-direction: column;
+    max-width: 95%;
+    margin: 1rem auto;
+    padding: 0 1rem; /* add breathing room on sides */
+  }
+  .left-column,
+  .right-column {
+    flex: unset;
+    width: 100%;
+    min-width: unset;
+  }
+  .team-header {
+    margin: 1rem auto;
+    padding: 1rem;
+    width: 95%;
+  }
+  .team-tabs {
+    width: 95%;
+    margin: 0 auto 1rem auto;
+    padding: 0 0.5rem;
+  }
+  .stats-container {
+    max-width: 95%;
+    margin: 0 auto 1rem auto;
+    padding: 0 1rem;
+  }
+  .player-stats-table {
+  max-width: 95%;
+  margin: 1rem auto; /* center it nicely */
+  padding: 0 1rem;
+  }
+}
+
+

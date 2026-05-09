@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Page | Northwoods Football League</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/colors.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/team.css">
+  <link rel="stylesheet" href="css/game.css">
+  <link rel="stylesheet" href="css/media.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <script type="module" src="scripts/teams.js" defer></script>
+<script src="scripts/navbar.js" type="module"></script>
+
+</head>
+  <nav class="navbar">
+    <div class="navbar-left">
+      <img src="images/logos/NWFLlogo.png" alt="NWFL Logo" class="nwfl-logo" width="40" height="40" decoding="async" />
+      <span class="league-title">Northwoods Football League</span>
+    </div>
+    <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+    <label for="menu-toggle" class="hamburger">&#9776;</label>
+    <ul class="navbar-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="schedule.html">Schedule</a></li>
+      <li class="dropdown">
+        <a href="coaches.html">Teams</a>
+        <ul class="dropdown-content" id="teamDropdown"></ul>
+      </li>
+      <li><a href="stats.html">Stats</a></li>
+      <li><a href="trade.html">Trade Calc</a></li>
+      <li><a href="#">Rules</a></li>
+      <li class="dropdown">
+        <a href="#">Watch</a>
+        <ul class="dropdown-content">
+          <li><a href="https://www.youtube.com/@northwoodsfootballleague" target="_blank">YouTube</a></li>
+          <li><a href="https://www.twitch.tv/northwoodsfootballleague" target="_blank">Twitch</a></li>
+        </ul>
+      </li>
+      <li class="admin-button"><a href="admin.html">Admin</a></li>
+      <li id="authSlot" class="auth-slot"></li>
+    </ul>
+  </nav>
+
+ <main>
+    <div class="team-header">
+      <div class="team-header-inner">
+        <div class="team-logo-container">
+          <img id="teamLogo" alt="Team Logo">
+        </div>
+        <div class="team-meta">
+          <h1 id="teamName">Team Name</h1>
+          <p id="teamDivision">Division</p>
+          <p><strong>Coach:</strong> <span id="teamCoach">Coach Name</span></p>
+          <p><strong>Record:</strong> <span id="teamRecord">0-0</span></p>
+          <p><strong>Overall:</strong> <span id="teamOverall"></span></p>
+          <p><strong>Rank:</strong> <span id="teamRank">--</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="carousel-controls">
+      <button class="tab-button carousel-controls" data-tab="home">Home</button>
+      <button class="tab-button carousel-controls" data-tab="schedule">Schedule</button>
+      <button class="tab-button carousel-controls" data-tab="statistics">Statistics</button>
+      <button class="tab-button carousel-controls" data-tab="depth">Depth Chart</button>
+    </div>
+
+    <section id="tab-home" class="tab-content active">
+  <div class="home-grid">
+    <div class="left-column">
+      <div class="info-box playoff-box" id="salaryCapBox">
+        <h2>Salary Cap</h2>
+        <p><strong>Cap Room:</strong> <span id="capRoom"></span></p>
+        <p><strong>Cap Spent:</strong> <span id="capSpent"></span></p>
+        <p><strong>Cap Available:</strong> <span id="capAvailable"></span></p>
+      </div>
+      <div class="info-box playoff-box" id="upcomingGamesBox">
+        <h2>Upcoming Games</h2>
+        <div id="upcomingGames" class="upcoming-games">
+          <!-- Dynamic game entries will be inserted here -->
+        </div>
+      </div>
+    </div>
+    <div class="right-column">
+<div class="info-box playoff-box" id="teamStatsBox">
+  <h2>Team Stats</h2>
+  <div class="team-stats-container">
+    <div class="team-stats-section">
+      <h3>Offense</h3>
+      <div class="stats-row">
+        <div><strong>Pts:</strong> <span id="ptsFor"></span> (<span id="ptsForRank"></span>)</div>
+        <div><strong>Pass Yds:</strong> <span id="offPassYds"></span> (<span id="offPassYdsRank"></span>)</div>
+        <div><strong>Rush Yds:</strong> <span id="offRushYds"></span> (<span id="offRushYdsRank"></span>)</div>
+        <div><strong>Total Yds:</strong> <span id="offTotalYds"></span> (<span id="offTotalYdsRank"></span>)</div>
+      </div>
+    </div>
+    <div class="team-stats-section">
+      <h3>Defense</h3>
+      <div class="stats-row">
+        <div><strong>Pts Allowed:</strong> <span id="ptsAgainst"></span> (<span id="ptsAgainstRank"></span>)</div>
+        <div><strong>Pass Yds Allowed:</strong> <span id="defPassYds"></span> (<span id="defPassYdsRank"></span>)</div>
+        <div><strong>Rush Yds Allowed:</strong> <span id="defRushYds"></span> (<span id="defRushYdsRank"></span>)</div>
+        <div><strong>Total Yds Allowed:</strong> <span id="defTotalYds"></span> (<span id="defTotalYdsRank"></span>)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </section>
+
+<div class="tab-content" id="tab-schedule">
+  <div class="schedule-filters-container">
+    <div class="schedule-filters">
+      <label>
+        Season:
+        <select id="seasonFilter">
+          <option value="reg">Regular Season</option>
+          <option value="pre">Preseason</option>
+          <option value="post">Postseason</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <!-- NEW schedule container starts here -->
+  <div class="schedule-container">
+    <div class="schedule-header">
+      <div>Week</div>
+      <div>Opp</div>
+      <div>Result</div>
+    </div>
+    <div id="scheduleList" class="schedule-list">
+      <p>Loading schedule...</p>
+    </div>
+  </div>
+  <!-- NEW schedule container ends here -->
+</div>
+
+
+<div id="tab-statistics" class="tab-content">
+  <div class="stats-container">
+    <h2>Team Statistics</h2>
+
+    <div class="stats-section" id="passingStats">
+      <h3>Passing</h3>
+      <div class="stats-table" id="passingTable">
+        <p>Loading passing stats...</p>
+      </div>
+    </div>
+
+    <div class="stats-section" id="rushingStats">
+      <h3>Rushing</h3>
+      <div class="stats-table" id="rushingTable">
+        <p>Loading rushing stats...</p>
+      </div>
+    </div>
+
+    <div class="stats-section" id="receivingStats">
+      <h3>Receiving</h3>
+      <div class="stats-table" id="receivingTable">
+        <p>Loading receiving stats...</p>
+      </div>
+    </div>
+
+    <div class="stats-section" id="defenseStats">
+      <h3>Defense</h3>
+      <div class="stats-table" id="defenseTable">
+        <p>Loading defensive stats...</p>
+      </div>
+    </div>
+
+    <div class="stats-section" id="kickingStats">
+      <h3>Kicking & Punting</h3>
+      <div class="stats-table" id="kickingTable">
+        <p>Loading kicking stats...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <section id="tab-depth" class="tab-content">
+      <div class="info-box playoff-box">
+        <h2>Depth Chart</h2>
+        <p>(Depth chart section coming soon...)</p>
+      </div>
+    </section>
+  </main>
+      <footer class="site-footer">
+  <p>
+    Copyright © Northwoodsfblg.com, 2025. This site is not recognized, sponsored, endorsed or affiliated with the National Football League (NFL), National Football League Players' Association (NFLPA), Microsoft, Xbox, Sony Corporation, Playstation or EA Sports. All NFL team logos are registered trademarks of the NFL and their respective clubs.
+  </p>
+</footer>
+  <script type="module" src="scripts/authWidget.js"></script>
+</body>
+</html>
